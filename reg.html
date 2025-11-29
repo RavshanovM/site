@@ -1,460 +1,460 @@
-!doctype html
-html lang=ru
- head
-  meta charset=UTF-8
-  meta name=viewport content=width=device-width, initial-scale=1.0
-  titleBank Client Registrationtitle
-  script src=_sdkelement_sdk.jsscript
-  script src=_sdkdata_sdk.jsscript
-  style
+<!doctype html>
+<html lang="ru">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bank Client Registration</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <style>
         body {
-            box-sizing border-box;
-            margin 0;
-            padding 0;
-            font-family 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color #e2e8f0;
-            width 100%;
-            min-height 100%;
-            display flex;
-            align-items center;
-            justify-content center;
-            padding 40px 20px;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            width: 100%;
+            min-height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
         }
 
-         {
-            box-sizing border-box;
+        * {
+            box-sizing: border-box;
         }
 
         .registration-container {
-            width 100%;
-            max-width 480px;
-            background rgba(30, 41, 59, 0.8);
-            backdrop-filter blur(10px);
-            border 1px solid rgba(100, 116, 139, 0.3);
-            border-radius 24px;
-            padding 48px 40px;
-            box-shadow 0 20px 60px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 480px;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            border-radius: 24px;
+            padding: 48px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
 
         .logo-section {
-            text-align center;
-            margin-bottom 32px;
+            text-align: center;
+            margin-bottom: 32px;
         }
 
         .logo-icon {
-            width 72px;
-            height 72px;
-            background linear-gradient(135deg, #3b82f6, #8b5cf6);
-            border-radius 16px;
-            display inline-flex;
-            align-items center;
-            justify-content center;
-            font-size 36px;
-            margin-bottom 16px;
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin-bottom: 16px;
         }
 
         .page-title {
-            font-size 32px;
-            font-weight 700;
-            margin 0 0 8px 0;
-            background linear-gradient(90deg, #3b82f6, #8b5cf6);
-            -webkit-background-clip text;
-            -webkit-text-fill-color transparent;
-            background-clip text;
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .page-subtitle {
-            font-size 14px;
-            color #94a3b8;
-            margin 0;
+            font-size: 14px;
+            color: #94a3b8;
+            margin: 0;
         }
 
         .form-group {
-            margin-bottom 24px;
+            margin-bottom: 24px;
         }
 
         .form-label {
-            display block;
-            font-size 14px;
-            font-weight 500;
-            color #cbd5e1;
-            margin-bottom 8px;
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #cbd5e1;
+            margin-bottom: 8px;
         }
 
         .input-wrapper {
-            position relative;
+            position: relative;
         }
 
         .input-icon {
-            position absolute;
-            left 16px;
-            top 50%;
-            transform translateY(-50%);
-            font-size 18px;
-            color #64748b;
-            pointer-events none;
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: #64748b;
+            pointer-events: none;
         }
 
         .form-input {
-            width 100%;
-            padding 14px 16px 14px 48px;
-            background rgba(15, 23, 42, 0.8);
-            border 1px solid rgba(100, 116, 139, 0.3);
-            border-radius 12px;
-            color #e2e8f0;
-            font-size 15px;
-            font-family inherit;
-            transition all 0.3s;
+            width: 100%;
+            padding: 14px 16px 14px 48px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s;
         }
 
-        .form-inputfocus {
-            outline none;
-            border-color #3b82f6;
-            box-shadow 0 0 0 3px rgba(59, 130, 246, 0.1);
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         .form-input.error {
-            border-color #ef4444;
+            border-color: #ef4444;
         }
 
         .form-input.success {
-            border-color #10b981;
+            border-color: #10b981;
         }
 
         .toggle-password {
-            position absolute;
-            right 16px;
-            top 50%;
-            transform translateY(-50%);
-            font-size 18px;
-            cursor pointer;
-            color #64748b;
-            transition color 0.3s;
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            cursor: pointer;
+            color: #64748b;
+            transition: color 0.3s;
         }
 
-        .toggle-passwordhover {
-            color #3b82f6;
+        .toggle-password:hover {
+            color: #3b82f6;
         }
 
         .error-message {
-            display none;
-            font-size 12px;
-            color #ef4444;
-            margin-top 6px;
-            padding-left 4px;
+            display: none;
+            font-size: 12px;
+            color: #ef4444;
+            margin-top: 6px;
+            padding-left: 4px;
         }
 
         .error-message.visible {
-            display block;
+            display: block;
         }
 
         .success-message {
-            display none;
-            font-size 12px;
-            color #10b981;
-            margin-top 6px;
-            padding-left 4px;
+            display: none;
+            font-size: 12px;
+            color: #10b981;
+            margin-top: 6px;
+            padding-left: 4px;
         }
 
         .success-message.visible {
-            display block;
+            display: block;
         }
 
         .password-strength {
-            margin-top 8px;
-            display none;
+            margin-top: 8px;
+            display: none;
         }
 
         .password-strength.visible {
-            display block;
+            display: block;
         }
 
         .strength-label {
-            font-size 12px;
-            color #94a3b8;
-            margin-bottom 6px;
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 6px;
         }
 
         .strength-bar {
-            height 4px;
-            background rgba(100, 116, 139, 0.3);
-            border-radius 2px;
-            overflow hidden;
+            height: 4px;
+            background: rgba(100, 116, 139, 0.3);
+            border-radius: 2px;
+            overflow: hidden;
         }
 
         .strength-fill {
-            height 100%;
-            width 0%;
-            transition all 0.3s;
-            border-radius 2px;
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s;
+            border-radius: 2px;
         }
 
         .strength-fill.weak {
-            width 33%;
-            background #ef4444;
+            width: 33%;
+            background: #ef4444;
         }
 
         .strength-fill.medium {
-            width 66%;
-            background #f59e0b;
+            width: 66%;
+            background: #f59e0b;
         }
 
         .strength-fill.strong {
-            width 100%;
-            background #10b981;
+            width: 100%;
+            background: #10b981;
         }
 
         .submit-button {
-            width 100%;
-            padding 16px;
-            background linear-gradient(135deg, #3b82f6, #2563eb);
-            border none;
-            border-radius 12px;
-            color white;
-            font-size 16px;
-            font-weight 600;
-            cursor pointer;
-            transition all 0.3s;
-            font-family inherit;
-            margin-top 8px;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            margin-top: 8px;
         }
 
-        .submit-buttonhovernot(disabled) {
-            background linear-gradient(135deg, #2563eb, #1d4ed8);
-            transform translateY(-2px);
-            box-shadow 0 8px 24px rgba(59, 130, 246, 0.4);
+        .submit-button:hover:not(:disabled) {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
         }
 
-        .submit-buttondisabled {
-            opacity 0.5;
-            cursor not-allowed;
+        .submit-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .loading-spinner {
-            display inline-block;
-            width 16px;
-            height 16px;
-            border 2px solid rgba(255, 255, 255, 0.3);
-            border-top-color white;
-            border-radius 50%;
-            animation spin 0.6s linear infinite;
-            margin-right 8px;
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 8px;
         }
 
         @keyframes spin {
-            to { transform rotate(360deg); }
+            to { transform: rotate(360deg); }
         }
 
         .login-link {
-            text-align center;
-            margin-top 24px;
-            font-size 14px;
-            color #94a3b8;
+            text-align: center;
+            margin-top: 24px;
+            font-size: 14px;
+            color: #94a3b8;
         }
 
         .login-link a {
-            color #3b82f6;
-            text-decoration none;
-            font-weight 500;
-            transition color 0.3s;
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
         }
 
-        .login-link ahover {
-            color #60a5fa;
-            text-decoration underline;
+        .login-link a:hover {
+            color: #60a5fa;
+            text-decoration: underline;
         }
 
         .success-modal {
-            display none;
-            position fixed;
-            top 0;
-            left 0;
-            right 0;
-            bottom 0;
-            background rgba(0, 0, 0, 0.7);
-            align-items center;
-            justify-content center;
-            z-index 1000;
-            padding 20px;
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
         }
 
         .success-modal.visible {
-            display flex;
+            display: flex;
         }
 
         .success-modal-content {
-            background #1e293b;
-            border-radius 20px;
-            padding 40px;
-            text-align center;
-            max-width 400px;
-            width 100%;
-            border 1px solid rgba(100, 116, 139, 0.3);
-            box-shadow 0 20px 60px rgba(0, 0, 0, 0.5);
-            animation modalSlideIn 0.3s ease-out;
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: modalSlideIn 0.3s ease-out;
         }
 
         @keyframes modalSlideIn {
             from {
-                opacity 0;
-                transform translateY(-20px);
+                opacity: 0;
+                transform: translateY(-20px);
             }
             to {
-                opacity 1;
-                transform translateY(0);
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
         .success-icon {
-            width 72px;
-            height 72px;
-            background rgba(16, 185, 129, 0.15);
-            border-radius 50%;
-            display inline-flex;
-            align-items center;
-            justify-content center;
-            font-size 36px;
-            margin-bottom 20px;
+            width: 72px;
+            height: 72px;
+            background: rgba(16, 185, 129, 0.15);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin-bottom: 20px;
         }
 
         .success-title {
-            font-size 24px;
-            font-weight 700;
-            color #f1f5f9;
-            margin 0 0 12px 0;
+            font-size: 24px;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin: 0 0 12px 0;
         }
 
         .success-text {
-            font-size 14px;
-            color #94a3b8;
-            margin 0 0 24px 0;
-            line-height 1.6;
+            font-size: 14px;
+            color: #94a3b8;
+            margin: 0 0 24px 0;
+            line-height: 1.6;
         }
 
         .modal-button {
-            padding 12px 32px;
-            background linear-gradient(135deg, #3b82f6, #2563eb);
-            border none;
-            border-radius 10px;
-            color white;
-            font-size 14px;
-            font-weight 600;
-            cursor pointer;
-            transition all 0.3s;
-            font-family inherit;
+            padding: 12px 32px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
         }
 
-        .modal-buttonhover {
-            background linear-gradient(135deg, #2563eb, #1d4ed8);
-            transform translateY(-2px);
+        .modal-button:hover {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            transform: translateY(-2px);
         }
 
-        @media (max-width 576px) {
+        @media (max-width: 576px) {
             .registration-container {
-                padding 32px 24px;
+                padding: 32px 24px;
             }
 
             .page-title {
-                font-size 28px;
+                font-size: 28px;
             }
         }
-    style
-  style@view-transition { navigation auto; }style
-  script src=httpscdn.tailwindcss.com type=textjavascriptscript
- head
- body
-  div class=registration-container
-   div class=logo-section
-    div class=logo-icon
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="registration-container">
+   <div class="logo-section">
+    <div class="logo-icon">
      🏦
-    div
-    h1 class=page-title id=page-titleРегистрацияh1
-    p class=page-subtitle id=page-subtitleСоздайте аккаунт для доступа к банковским услугамp
-   div
-   form id=registration-form!-- ФИО --
-    div class=form-grouplabel for=full-name class=form-label id=full-name-labelФИО (полностью)label
-     div class=input-wrapperspan class=input-icon👤span input type=text id=full-name class=form-input placeholder=Иванов Иван Иванович required
-     div
-     div class=error-message id=full-name-errordiv
-    div!-- Телефон --
-    div class=form-grouplabel for=phone class=form-label id=phone-labelНомер телефонаlabel
-     div class=input-wrapperspan class=input-icon📞span input type=tel id=phone class=form-input placeholder=+998 (90) 123-45-67 required
-     div
-     div class=error-message id=phone-errordiv
-     div class=success-message id=phone-success
+    </div>
+    <h1 class="page-title" id="page-title">Регистрация</h1>
+    <p class="page-subtitle" id="page-subtitle">Создайте аккаунт для доступа к банковским услугам</p>
+   </div>
+   <form id="registration-form"><!-- ФИО -->
+    <div class="form-group"><label for="full-name" class="form-label" id="full-name-label">ФИО (полностью)</label>
+     <div class="input-wrapper"><span class="input-icon">👤</span> <input type="text" id="full-name" class="form-input" placeholder="Иванов Иван Иванович" required>
+     </div>
+     <div class="error-message" id="full-name-error"></div>
+    </div><!-- Телефон -->
+    <div class="form-group"><label for="phone" class="form-label" id="phone-label">Номер телефона</label>
+     <div class="input-wrapper"><span class="input-icon">📞</span> <input type="tel" id="phone" class="form-input" placeholder="+998 (90) 123-45-67" required>
+     </div>
+     <div class="error-message" id="phone-error"></div>
+     <div class="success-message" id="phone-success">
       ✓ Формат номера корректен
-     div
-    div!-- ПИНФЛ --
-    div class=form-grouplabel for=pinfl class=form-label id=pinfl-labelПИНФЛlabel
-     div class=input-wrapperspan class=input-icon📄span input type=text id=pinfl class=form-input placeholder=12345678901234 maxlength=14 required
-     div
-     div class=error-message id=pinfl-errordiv
-     div class=success-message id=pinfl-success
+     </div>
+    </div><!-- ПИНФЛ -->
+    <div class="form-group"><label for="pinfl" class="form-label" id="pinfl-label">ПИНФЛ</label>
+     <div class="input-wrapper"><span class="input-icon">📄</span> <input type="text" id="pinfl" class="form-input" placeholder="12345678901234" maxlength="14" required>
+     </div>
+     <div class="error-message" id="pinfl-error"></div>
+     <div class="success-message" id="pinfl-success">
       ✓ ПИНФЛ корректен
-     div
-    div!-- Email --
-    div class=form-grouplabel for=email class=form-label id=email-labelЭлектронная почтаlabel
-     div class=input-wrapperspan class=input-icon✉️span input type=email id=email class=form-input placeholder=example@mail.com required
-     div
-     div class=error-message id=email-errordiv
-     div class=success-message id=email-success
+     </div>
+    </div><!-- Email -->
+    <div class="form-group"><label for="email" class="form-label" id="email-label">Электронная почта</label>
+     <div class="input-wrapper"><span class="input-icon">✉️</span> <input type="email" id="email" class="form-input" placeholder="example@mail.com" required>
+     </div>
+     <div class="error-message" id="email-error"></div>
+     <div class="success-message" id="email-success">
       ✓ Email корректен
-     div
-    div!-- Пароль --
-    div class=form-grouplabel for=password class=form-label id=password-labelПарольlabel
-     div class=input-wrapperspan class=input-icon🔒span input type=password id=password class=form-input placeholder=Введите пароль required span class=toggle-password onclick=togglePassword('password')👁️span
-     div
-     div class=error-message id=password-errordiv
-     div class=password-strength id=password-strength
-      div class=strength-label
-       Надёжность пароля span id=strength-textСлабыйspan
-      div
-      div class=strength-bar
-       div class=strength-fill id=strength-filldiv
-      div
-     div
-    div!-- Подтверждение пароля --
-    div class=form-grouplabel for=confirm-password class=form-label id=confirm-password-labelПодтверждение пароляlabel
-     div class=input-wrapperspan class=input-icon🔒span input type=password id=confirm-password class=form-input placeholder=Повторите пароль required span class=toggle-password onclick=togglePassword('confirm-password')👁️span
-     div
-     div class=error-message id=confirm-password-errordiv
-     div class=success-message id=confirm-password-success
+     </div>
+    </div><!-- Пароль -->
+    <div class="form-group"><label for="password" class="form-label" id="password-label">Пароль</label>
+     <div class="input-wrapper"><span class="input-icon">🔒</span> <input type="password" id="password" class="form-input" placeholder="Введите пароль" required> <span class="toggle-password" onclick="togglePassword('password')">👁️</span>
+     </div>
+     <div class="error-message" id="password-error"></div>
+     <div class="password-strength" id="password-strength">
+      <div class="strength-label">
+       Надёжность пароля: <span id="strength-text">Слабый</span>
+      </div>
+      <div class="strength-bar">
+       <div class="strength-fill" id="strength-fill"></div>
+      </div>
+     </div>
+    </div><!-- Подтверждение пароля -->
+    <div class="form-group"><label for="confirm-password" class="form-label" id="confirm-password-label">Подтверждение пароля</label>
+     <div class="input-wrapper"><span class="input-icon">🔒</span> <input type="password" id="confirm-password" class="form-input" placeholder="Повторите пароль" required> <span class="toggle-password" onclick="togglePassword('confirm-password')">👁️</span>
+     </div>
+     <div class="error-message" id="confirm-password-error"></div>
+     <div class="success-message" id="confirm-password-success">
       ✓ Пароли совпадают
-     div
-    divbutton type=submit class=submit-button id=submit-button span id=submit-button-textЗарегистрироватьсяspan button
-   form
-   div class=login-linkspan id=login-link-textУ меня уже есть аккаунтspan · a href=# onclick=navigateToLogin(event)Войтиa
-   div
-  div!-- Success Modal --
-  div class=success-modal id=success-modal
-   div class=success-modal-content
-    div class=success-icon
+     </div>
+    </div><button type="submit" class="submit-button" id="submit-button"> <span id="submit-button-text">Зарегистрироваться</span> </button>
+   </form>
+   <div class="login-link"><span id="login-link-text">У меня уже есть аккаунт</span> · <a href="#" onclick="navigateToLogin(event)">Войти</a>
+   </div>
+  </div><!-- Success Modal -->
+  <div class="success-modal" id="success-modal">
+   <div class="success-modal-content">
+    <div class="success-icon">
      ✓
-    div
-    h2 class=success-titleРегистрация успешна!h2
-    p class=success-textВаш аккаунт был создан. Теперь вы можете войти в систему и пользоваться банковскими услугами.pbutton class=modal-button onclick=closeSuccessModal()Перейти к входуbutton
-   div
-  div
-  script
+    </div>
+    <h2 class="success-title">Регистрация успешна!</h2>
+    <p class="success-text">Ваш аккаунт был создан. Теперь вы можете войти в систему и пользоваться банковскими услугами.</p><button class="modal-button" onclick="closeSuccessModal()">Перейти к входу</button>
+   </div>
+  </div>
+  <script>
         const defaultConfig = {
-            page_title Регистрация,
-            page_subtitle Создайте аккаунт для доступа к банковским услугам,
-            full_name_label ФИО (полностью),
-            phone_label Номер телефона,
-            pinfl_label ПИНФЛ,
-            email_label Электронная почта,
-            password_label Пароль,
-            confirm_password_label Подтверждение пароля,
-            submit_button_text Зарегистрироваться,
-            login_link_text У меня уже есть аккаунт,
-            background_color #0f172a,
-            card_color #1e293b,
-            text_color #e2e8f0,
-            primary_color #3b82f6,
-            accent_color #8b5cf6,
-            font_family Inter,
-            font_size 16
+            page_title: "Регистрация",
+            page_subtitle: "Создайте аккаунт для доступа к банковским услугам",
+            full_name_label: "ФИО (полностью)",
+            phone_label: "Номер телефона",
+            pinfl_label: "ПИНФЛ",
+            email_label: "Электронная почта",
+            password_label: "Пароль",
+            confirm_password_label: "Подтверждение пароля",
+            submit_button_text: "Зарегистрироваться",
+            login_link_text: "У меня уже есть аккаунт",
+            background_color: "#0f172a",
+            card_color: "#1e293b",
+            text_color: "#e2e8f0",
+            primary_color: "#3b82f6",
+            accent_color: "#8b5cf6",
+            font_family: "Inter",
+            font_size: 16
         };
 
         let registeredUsers = [];
@@ -469,83 +469,83 @@ html lang=ru
             if (window.dataSdk) {
                 const result = await window.dataSdk.init(dataHandler);
                 if (!result.isOk) {
-                    console.error(Failed to initialize data SDK);
+                    console.error("Failed to initialize data SDK");
                 }
             }
         }
 
-         Validation functions
+        // Validation functions
         function validateFullName(name) {
             const trimmed = name.trim();
-            if (trimmed.length  5) {
-                return { valid false, message ФИО должно содержать минимум 5 символов };
+            if (trimmed.length < 5) {
+                return { valid: false, message: "ФИО должно содержать минимум 5 символов" };
             }
-            const parts = trimmed.split(' ').filter(p = p.length  0);
-            if (parts.length  2) {
-                return { valid false, message Введите полное ФИО (Фамилия Имя Отчество) };
+            const parts = trimmed.split(' ').filter(p => p.length > 0);
+            if (parts.length < 2) {
+                return { valid: false, message: "Введите полное ФИО (Фамилия Имя Отчество)" };
             }
-            return { valid true, message  };
+            return { valid: true, message: "" };
         }
 
         function validatePhone(phone) {
-            const cleaned = phone.replace(Dg, '');
-            if (cleaned.length  12) {
-                return { valid false, message Неверный формат номера телефона };
+            const cleaned = phone.replace(/\D/g, '');
+            if (cleaned.length < 12) {
+                return { valid: false, message: "Неверный формат номера телефона" };
             }
             if (!cleaned.startsWith('998')) {
-                return { valid false, message Номер должен начинаться с +998 };
+                return { valid: false, message: "Номер должен начинаться с +998" };
             }
-            return { valid true, message  };
+            return { valid: true, message: "" };
         }
 
         function validatePinfl(pinfl) {
-            const cleaned = pinfl.replace(Dg, '');
+            const cleaned = pinfl.replace(/\D/g, '');
             if (cleaned.length !== 14) {
-                return { valid false, message ПИНФЛ должен содержать 14 цифр };
+                return { valid: false, message: "ПИНФЛ должен содержать 14 цифр" };
             }
-            return { valid true, message  };
+            return { valid: true, message: "" };
         }
 
         function validateEmail(email) {
-            const emailRegex = ^[^s@]+@[^s@]+.[^s@]+$;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
-                return { valid false, message Неверный формат электронной почты };
+                return { valid: false, message: "Неверный формат электронной почты" };
             }
-            return { valid true, message  };
+            return { valid: true, message: "" };
         }
 
         function validatePassword(password) {
-            if (password.length  6) {
-                return { valid false, message Пароль должен содержать минимум 6 символов, strength weak };
+            if (password.length < 6) {
+                return { valid: false, message: "Пароль должен содержать минимум 6 символов", strength: "weak" };
             }
             
-            let strength = weak;
+            let strength = "weak";
             let score = 0;
             
-            if (password.length = 8) score++;
-            if ([a-z].test(password)) score++;
-            if ([A-Z].test(password)) score++;
-            if ([0-9].test(password)) score++;
-            if ([^a-zA-Z0-9].test(password)) score++;
+            if (password.length >= 8) score++;
+            if (/[a-z]/.test(password)) score++;
+            if (/[A-Z]/.test(password)) score++;
+            if (/[0-9]/.test(password)) score++;
+            if (/[^a-zA-Z0-9]/.test(password)) score++;
             
-            if (score = 4) strength = strong;
-            else if (score = 2) strength = medium;
+            if (score >= 4) strength = "strong";
+            else if (score >= 2) strength = "medium";
             
-            if (score  2) {
-                return { valid false, message Слабый пароль. Используйте буквы, цифры и символы, strength };
+            if (score < 2) {
+                return { valid: false, message: "Слабый пароль. Используйте буквы, цифры и символы", strength };
             }
             
-            return { valid true, message , strength };
+            return { valid: true, message: "", strength };
         }
 
         function validateConfirmPassword(password, confirmPassword) {
             if (password !== confirmPassword) {
-                return { valid false, message Пароли не совпадают };
+                return { valid: false, message: "Пароли не совпадают" };
             }
-            return { valid true, message  };
+            return { valid: true, message: "" };
         }
 
-         Show errorsuccess
+        // Show error/success
         function showError(fieldId, message) {
             const input = document.getElementById(fieldId);
             const errorEl = document.getElementById(`${fieldId}-error`);
@@ -579,7 +579,7 @@ html lang=ru
             if (successEl) successEl.classList.remove('visible');
         }
 
-         Real-time validation
+        // Real-time validation
         document.getElementById('full-name').addEventListener('blur', function() {
             const result = validateFullName(this.value);
             if (!result.valid) {
@@ -590,21 +590,21 @@ html lang=ru
         });
 
         document.getElementById('phone').addEventListener('input', function() {
-            let value = this.value.replace(Dg, '');
+            let value = this.value.replace(/\D/g, '');
             if (value.startsWith('998')) {
                 value = value.substring(3);
             }
             
             let formatted = '+998';
-            if (value.length  0) {
+            if (value.length > 0) {
                 formatted += ' (' + value.substring(0, 2);
-                if (value.length  2) {
+                if (value.length > 2) {
                     formatted += ') ' + value.substring(2, 5);
                 }
-                if (value.length  5) {
+                if (value.length > 5) {
                     formatted += '-' + value.substring(5, 7);
                 }
-                if (value.length  7) {
+                if (value.length > 7) {
                     formatted += '-' + value.substring(7, 9);
                 }
             }
@@ -622,7 +622,7 @@ html lang=ru
         });
 
         document.getElementById('pinfl').addEventListener('input', function() {
-            this.value = this.value.replace(Dg, '');
+            this.value = this.value.replace(/\D/g, '');
         });
 
         document.getElementById('pinfl').addEventListener('blur', function() {
@@ -649,7 +649,7 @@ html lang=ru
             const fillEl = document.getElementById('strength-fill');
             const textEl = document.getElementById('strength-text');
             
-            if (this.value.length  0) {
+            if (this.value.length > 0) {
                 strengthEl.classList.add('visible');
                 fillEl.className = 'strength-fill ' + result.strength;
                 
@@ -680,7 +680,7 @@ html lang=ru
             }
         });
 
-         Toggle password visibility
+        // Toggle password visibility
         function togglePassword(fieldId) {
             const input = document.getElementById(fieldId);
             if (input.type === 'password') {
@@ -690,7 +690,7 @@ html lang=ru
             }
         }
 
-         Form submission
+        // Form submission
         document.getElementById('registration-form').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -701,23 +701,23 @@ html lang=ru
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirm-password').value;
 
-             Validate all fields
+            // Validate all fields
             const validations = [
-                { field 'full-name', result validateFullName(fullName) },
-                { field 'phone', result validatePhone(phone) },
-                { field 'pinfl', result validatePinfl(pinfl) },
-                { field 'email', result validateEmail(email) },
-                { field 'password', result validatePassword(password) },
-                { field 'confirm-password', result validateConfirmPassword(password, confirmPassword) }
+                { field: 'full-name', result: validateFullName(fullName) },
+                { field: 'phone', result: validatePhone(phone) },
+                { field: 'pinfl', result: validatePinfl(pinfl) },
+                { field: 'email', result: validateEmail(email) },
+                { field: 'password', result: validatePassword(password) },
+                { field: 'confirm-password', result: validateConfirmPassword(password, confirmPassword) }
             ];
 
             let isValid = true;
-            validations.forEach(v = {
+            validations.forEach(v => {
                 if (!v.result.valid) {
                     showError(v.field, v.result.message);
                     isValid = false;
                 } else {
-                    if (v.field === 'phone'  v.field === 'pinfl'  v.field === 'email'  v.field === 'confirm-password') {
+                    if (v.field === 'phone' || v.field === 'pinfl' || v.field === 'email' || v.field === 'confirm-password') {
                         showSuccess(v.field);
                     }
                 }
@@ -725,34 +725,34 @@ html lang=ru
 
             if (!isValid) return;
 
-             Show loading state
+            // Show loading state
             const submitBtn = document.getElementById('submit-button');
             const originalContent = submitBtn.innerHTML;
             submitBtn.disabled = true;
-            submitBtn.innerHTML = 'span class=loading-spinnerspan Регистрация...';
+            submitBtn.innerHTML = '<span class="loading-spinner"></span> Регистрация...';
 
-             Simulate API call delay
-            await new Promise(resolve = setTimeout(resolve, 1500));
+            // Simulate API call delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
 
-             Save to Data SDK
+            // Save to Data SDK
             if (window.dataSdk) {
                 const userData = {
-                    id 'user_' + Date.now(),
-                    full_name fullName,
-                    phone phone,
-                    pinfl pinfl,
-                    email email,
-                    password password,
-                    registered_at new Date().toISOString(),
-                    status 'active'
+                    id: 'user_' + Date.now(),
+                    full_name: fullName,
+                    phone: phone,
+                    pinfl: pinfl,
+                    email: email,
+                    password: password,
+                    registered_at: new Date().toISOString(),
+                    status: 'active'
                 };
 
                 const result = await window.dataSdk.create(userData);
 
                 if (result.isOk) {
-                     Show success modal
+                    // Show success modal
                     document.getElementById('success-modal').classList.add('visible');
-                     Reset form
+                    // Reset form
                     this.reset();
                     clearAllValidations();
                 } else {
@@ -779,50 +779,50 @@ html lang=ru
             
             const toast = document.createElement('div');
             toast.style.cssText = `
-                position fixed;
-                bottom 32px;
-                right 32px;
-                background rgba(59, 130, 246, 0.9);
-                color white;
-                padding 16px 24px;
-                border-radius 12px;
-                font-size 14px;
-                font-weight 500;
-                box-shadow 0 8px 32px rgba(0, 0, 0, 0.3);
-                z-index 1000;
+                position: fixed;
+                bottom: 32px;
+                right: 32px;
+                background: rgba(59, 130, 246, 0.9);
+                color: white;
+                padding: 16px 24px;
+                border-radius: 12px;
+                font-size: 14px;
+                font-weight: 500;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+                z-index: 1000;
             `;
             toast.textContent = 'Переход на страницу входа...';
             document.body.appendChild(toast);
             
-            setTimeout(() = toast.remove(), 2000);
+            setTimeout(() => toast.remove(), 2000);
         }
 
-         Element SDK
+        // Element SDK
         async function onConfigChange(config) {
-            const fontFamily = config.font_family  defaultConfig.font_family;
-            const fontSize = config.font_size  defaultConfig.font_size;
-            const baseFontStack = '-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif';
+            const fontFamily = config.font_family || defaultConfig.font_family;
+            const fontSize = config.font_size || defaultConfig.font_size;
+            const baseFontStack = '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
 
             document.body.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
 
-            document.getElementById('page-title').textContent = config.page_title  defaultConfig.page_title;
-            document.getElementById('page-subtitle').textContent = config.page_subtitle  defaultConfig.page_subtitle;
-            document.getElementById('full-name-label').textContent = config.full_name_label  defaultConfig.full_name_label;
-            document.getElementById('phone-label').textContent = config.phone_label  defaultConfig.phone_label;
-            document.getElementById('pinfl-label').textContent = config.pinfl_label  defaultConfig.pinfl_label;
-            document.getElementById('email-label').textContent = config.email_label  defaultConfig.email_label;
-            document.getElementById('password-label').textContent = config.password_label  defaultConfig.password_label;
-            document.getElementById('confirm-password-label').textContent = config.confirm_password_label  defaultConfig.confirm_password_label;
-            document.getElementById('submit-button-text').textContent = config.submit_button_text  defaultConfig.submit_button_text;
-            document.getElementById('login-link-text').textContent = config.login_link_text  defaultConfig.login_link_text;
+            document.getElementById('page-title').textContent = config.page_title || defaultConfig.page_title;
+            document.getElementById('page-subtitle').textContent = config.page_subtitle || defaultConfig.page_subtitle;
+            document.getElementById('full-name-label').textContent = config.full_name_label || defaultConfig.full_name_label;
+            document.getElementById('phone-label').textContent = config.phone_label || defaultConfig.phone_label;
+            document.getElementById('pinfl-label').textContent = config.pinfl_label || defaultConfig.pinfl_label;
+            document.getElementById('email-label').textContent = config.email_label || defaultConfig.email_label;
+            document.getElementById('password-label').textContent = config.password_label || defaultConfig.password_label;
+            document.getElementById('confirm-password-label').textContent = config.confirm_password_label || defaultConfig.confirm_password_label;
+            document.getElementById('submit-button-text').textContent = config.submit_button_text || defaultConfig.submit_button_text;
+            document.getElementById('login-link-text').textContent = config.login_link_text || defaultConfig.login_link_text;
 
-            document.querySelector('.page-title').style.fontSize = `${fontSize  2}px`;
-            document.querySelector('.page-subtitle').style.fontSize = `${fontSize  0.875}px`;
-            document.querySelectorAll('.form-label').forEach(el = {
-                el.style.fontSize = `${fontSize  0.875}px`;
+            document.querySelector('.page-title').style.fontSize = `${fontSize * 2}px`;
+            document.querySelector('.page-subtitle').style.fontSize = `${fontSize * 0.875}px`;
+            document.querySelectorAll('.form-label').forEach(el => {
+                el.style.fontSize = `${fontSize * 0.875}px`;
             });
-            document.querySelectorAll('.form-input').forEach(el = {
-                el.style.fontSize = `${fontSize  0.9375}px`;
+            document.querySelectorAll('.form-input').forEach(el => {
+                el.style.fontSize = `${fontSize * 0.9375}px`;
             });
         }
 
@@ -830,76 +830,76 @@ html lang=ru
             window.elementSdk.init({
                 defaultConfig,
                 onConfigChange,
-                mapToCapabilities (config) = ({
-                    recolorables [
+                mapToCapabilities: (config) => ({
+                    recolorables: [
                         {
-                            get () = config.background_color  defaultConfig.background_color,
-                            set (value) = {
+                            get: () => config.background_color || defaultConfig.background_color,
+                            set: (value) => {
                                 config.background_color = value;
-                                window.elementSdk.setConfig({ background_color value });
+                                window.elementSdk.setConfig({ background_color: value });
                             }
                         },
                         {
-                            get () = config.card_color  defaultConfig.card_color,
-                            set (value) = {
+                            get: () => config.card_color || defaultConfig.card_color,
+                            set: (value) => {
                                 config.card_color = value;
-                                window.elementSdk.setConfig({ card_color value });
+                                window.elementSdk.setConfig({ card_color: value });
                             }
                         },
                         {
-                            get () = config.text_color  defaultConfig.text_color,
-                            set (value) = {
+                            get: () => config.text_color || defaultConfig.text_color,
+                            set: (value) => {
                                 config.text_color = value;
-                                window.elementSdk.setConfig({ text_color value });
+                                window.elementSdk.setConfig({ text_color: value });
                             }
                         },
                         {
-                            get () = config.primary_color  defaultConfig.primary_color,
-                            set (value) = {
+                            get: () => config.primary_color || defaultConfig.primary_color,
+                            set: (value) => {
                                 config.primary_color = value;
-                                window.elementSdk.setConfig({ primary_color value });
+                                window.elementSdk.setConfig({ primary_color: value });
                             }
                         },
                         {
-                            get () = config.accent_color  defaultConfig.accent_color,
-                            set (value) = {
+                            get: () => config.accent_color || defaultConfig.accent_color,
+                            set: (value) => {
                                 config.accent_color = value;
-                                window.elementSdk.setConfig({ accent_color value });
+                                window.elementSdk.setConfig({ accent_color: value });
                             }
                         }
                     ],
-                    borderables [],
-                    fontEditable {
-                        get () = config.font_family  defaultConfig.font_family,
-                        set (value) = {
+                    borderables: [],
+                    fontEditable: {
+                        get: () => config.font_family || defaultConfig.font_family,
+                        set: (value) => {
                             config.font_family = value;
-                            window.elementSdk.setConfig({ font_family value });
+                            window.elementSdk.setConfig({ font_family: value });
                         }
                     },
-                    fontSizeable {
-                        get () = config.font_size  defaultConfig.font_size,
-                        set (value) = {
+                    fontSizeable: {
+                        get: () => config.font_size || defaultConfig.font_size,
+                        set: (value) => {
                             config.font_size = value;
-                            window.elementSdk.setConfig({ font_size value });
+                            window.elementSdk.setConfig({ font_size: value });
                         }
                     }
                 }),
-                mapToEditPanelValues (config) = new Map([
-                    [page_title, config.page_title  defaultConfig.page_title],
-                    [page_subtitle, config.page_subtitle  defaultConfig.page_subtitle],
-                    [full_name_label, config.full_name_label  defaultConfig.full_name_label],
-                    [phone_label, config.phone_label  defaultConfig.phone_label],
-                    [pinfl_label, config.pinfl_label  defaultConfig.pinfl_label],
-                    [email_label, config.email_label  defaultConfig.email_label],
-                    [password_label, config.password_label  defaultConfig.password_label],
-                    [confirm_password_label, config.confirm_password_label  defaultConfig.confirm_password_label],
-                    [submit_button_text, config.submit_button_text  defaultConfig.submit_button_text],
-                    [login_link_text, config.login_link_text  defaultConfig.login_link_text]
+                mapToEditPanelValues: (config) => new Map([
+                    ["page_title", config.page_title || defaultConfig.page_title],
+                    ["page_subtitle", config.page_subtitle || defaultConfig.page_subtitle],
+                    ["full_name_label", config.full_name_label || defaultConfig.full_name_label],
+                    ["phone_label", config.phone_label || defaultConfig.phone_label],
+                    ["pinfl_label", config.pinfl_label || defaultConfig.pinfl_label],
+                    ["email_label", config.email_label || defaultConfig.email_label],
+                    ["password_label", config.password_label || defaultConfig.password_label],
+                    ["confirm_password_label", config.confirm_password_label || defaultConfig.confirm_password_label],
+                    ["submit_button_text", config.submit_button_text || defaultConfig.submit_button_text],
+                    ["login_link_text", config.login_link_text || defaultConfig.login_link_text]
                 ])
             });
         }
 
         initializeDataSdk();
-    script
- script(function(){function c(){var b=a.contentDocumenta.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=window.__CF$cv$params={r'9a62b11ec687bd24',t'MTc2NDQyNTQ2MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='cdn-cgichallenge-platformscriptsjsdmain.js';document.getElementsByTagName('head')[0].appendChild(a);;b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechangefunction(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();scriptbody
-html
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a62bf0a57db9bf8',t:'MTc2NDQyNjAzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
