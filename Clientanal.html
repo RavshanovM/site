@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="ru">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bank Analytics Dashboard</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            min-height: 100%;
+            padding: 40px 30px;
+        }
+
+        .dashboard-header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .dashboard-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin: 0;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(100, 116, 139, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0 0 24px 0;
+            color: #f1f5f9;
+        }
+
+        .risk-gauge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .gauge-wrapper {
+            position: relative;
+            width: 240px;
+            height: 120px;
+        }
+
+        .gauge-bg {
+            position: absolute;
+            width: 240px;
+            height: 120px;
+            overflow: hidden;
+        }
+
+        .gauge-fill {
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            border: 28px solid transparent;
+            border-bottom-color: #ef4444;
+            border-left-color: #ef4444;
+            transform: rotate(225deg);
+            transition: transform 1s ease-out;
+        }
+
+        .gauge-track {
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            border: 28px solid rgba(148, 163, 184, 0.15);
+            border-bottom-color: transparent;
+            border-left-color: transparent;
+            transform: rotate(45deg);
+        }
+
+        .gauge-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .gauge-value {
+            font-size: 42px;
+            font-weight: 700;
+            color: #ef4444;
+        }
+
+        .gauge-label {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        .risk-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 24px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ef4444;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .status-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: #fca5a5;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 280px;
+            position: relative;
+        }
+
+        .chart-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .chart-grid-line {
+            stroke: rgba(148, 163, 184, 0.1);
+            stroke-width: 1;
+        }
+
+        .chart-axis {
+            stroke: rgba(148, 163, 184, 0.3);
+            stroke-width: 1;
+        }
+
+        .chart-label {
+            fill: #94a3b8;
+            font-size: 11px;
+        }
+
+        .chart-line {
+            fill: none;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .chart-area {
+            opacity: 0.15;
+        }
+
+        .chart-dot {
+            transition: r 0.2s;
+        }
+
+        .chart-dot:hover {
+            r: 6;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 1000;
+        }
+
+        .tooltip.visible {
+            opacity: 1;
+        }
+
+        @media (min-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .risk-card {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .risk-card {
+                grid-column: 1 / -1;
+            }
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <main class="dashboard-container">
+   <header class="dashboard-header">
+    <h1 class="dashboard-title" id="page-title">Аналитика клиента</h1>
+   </header>
+   <div class="dashboard-grid">
+    <div class="card risk-card">
+     <h2 class="card-title" id="risk-title">Риск дефолта</h2>
+     <div class="risk-gauge-container">
+      <div class="gauge-wrapper">
+       <div class="gauge-bg">
+        <div class="gauge-track"></div>
+        <div class="gauge-fill" id="gauge-fill"></div>
+       </div>
+       <div class="gauge-center">
+        <div class="gauge-value" id="gauge-value">
+         68%
+        </div>
+        <div class="gauge-label">
+         Вероятность
+        </div>
+       </div>
+      </div>
+      <div class="risk-status">
+       <div class="status-indicator"></div><span class="status-text">Высокий риск дефолта</span>
+      </div>
+     </div>
+    </div>
+    <div class="card">
+     <h2 class="card-title" id="credit-title">Динамика кредитов</h2>
+     <div class="chart-container">
+      <svg class="chart-svg" id="credit-chart"></svg>
+      <div class="tooltip" id="credit-tooltip"></div>
+     </div>
+    </div>
+    <div class="card">
+     <h2 class="card-title" id="payment-title">Ежемесячные платежи</h2>
+     <div class="chart-container">
+      <svg class="chart-svg" id="payment-chart"></svg>
+      <div class="tooltip" id="payment-tooltip"></div>
+     </div>
+    </div>
+    <div class="card">
+     <h2 class="card-title" id="debt-title">Текущий долг</h2>
+     <div class="chart-container">
+      <svg class="chart-svg" id="debt-chart"></svg>
+      <div class="tooltip" id="debt-tooltip"></div>
+     </div>
+    </div>
+   </div>
+  </main>
+  <script>
+        const defaultConfig = {
+            page_title: "Аналитика клиента",
+            risk_title: "Риск дефолта",
+            credit_chart_title: "Динамика кредитов",
+            payment_chart_title: "Ежемесячные платежи",
+            debt_chart_title: "Текущий долг",
+            background_color: "#0f172a",
+            card_color: "#1e293b",
+            primary_color: "#60a5fa",
+            secondary_color: "#ef4444",
+            text_color: "#e2e8f0",
+            font_family: "Inter",
+            font_size: 16
+        };
+
+        // Sample data
+        const creditData = [
+            { month: 'Янв', value: 500000 },
+            { month: 'Фев', value: 520000 },
+            { month: 'Мар', value: 480000 },
+            { month: 'Апр', value: 510000 },
+            { month: 'Май', value: 550000 },
+            { month: 'Июн', value: 530000 },
+            { month: 'Июл', value: 560000 },
+            { month: 'Авг', value: 545000 }
+        ];
+
+        const paymentData = [
+            { month: 'Янв', value: 25000 },
+            { month: 'Фев', value: 25000 },
+            { month: 'Мар', value: 15000 },
+            { month: 'Апр', value: 25000 },
+            { month: 'Май', value: 20000 },
+            { month: 'Июн', value: 10000 },
+            { month: 'Июл', value: 25000 },
+            { month: 'Авг', value: 18000 }
+        ];
+
+        const debtData = [
+            { month: 'Янв', value: 320000 },
+            { month: 'Фев', value: 315000 },
+            { month: 'Мар', value: 325000 },
+            { month: 'Апр', value: 310000 },
+            { month: 'Май', value: 340000 },
+            { month: 'Июн', value: 360000 },
+            { month: 'Июл', value: 345000 },
+            { month: 'Авг', value: 372000 }
+        ];
+
+        function drawChart(svgId, data, color, tooltipId, isCurrency = true) {
+            const svg = document.getElementById(svgId);
+            const tooltip = document.getElementById(tooltipId);
+            const padding = { top: 20, right: 20, bottom: 40, left: 60 };
+            const width = svg.clientWidth;
+            const height = svg.clientHeight;
+            const chartWidth = width - padding.left - padding.right;
+            const chartHeight = height - padding.top - padding.bottom;
+
+            svg.innerHTML = '';
+
+            const maxValue = Math.max(...data.map(d => d.value));
+            const minValue = Math.min(...data.map(d => d.value));
+            const valueRange = maxValue - minValue;
+            const yScale = chartHeight / (valueRange * 1.2);
+            const xScale = chartWidth / (data.length - 1);
+
+            // Grid lines
+            for (let i = 0; i <= 4; i++) {
+                const y = padding.top + (chartHeight / 4) * i;
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', padding.left);
+                line.setAttribute('y1', y);
+                line.setAttribute('x2', width - padding.right);
+                line.setAttribute('y2', y);
+                line.setAttribute('class', 'chart-grid-line');
+                svg.appendChild(line);
+
+                const value = maxValue - (valueRange / 4) * i;
+                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                label.setAttribute('x', padding.left - 10);
+                label.setAttribute('y', y + 4);
+                label.setAttribute('text-anchor', 'end');
+                label.setAttribute('class', 'chart-label');
+                label.textContent = isCurrency ? (value / 1000).toFixed(0) + 'К' : value.toFixed(0);
+                svg.appendChild(label);
+            }
+
+            // Area path
+            let areaPath = `M ${padding.left} ${height - padding.bottom}`;
+            data.forEach((d, i) => {
+                const x = padding.left + i * xScale;
+                const y = height - padding.bottom - (d.value - minValue + valueRange * 0.1) * yScale;
+                areaPath += ` L ${x} ${y}`;
+            });
+            areaPath += ` L ${padding.left + (data.length - 1) * xScale} ${height - padding.bottom} Z`;
+
+            const area = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            area.setAttribute('d', areaPath);
+            area.setAttribute('fill', color);
+            area.setAttribute('class', 'chart-area');
+            svg.appendChild(area);
+
+            // Line path
+            let linePath = '';
+            data.forEach((d, i) => {
+                const x = padding.left + i * xScale;
+                const y = height - padding.bottom - (d.value - minValue + valueRange * 0.1) * yScale;
+                linePath += (i === 0 ? 'M' : ' L') + ` ${x} ${y}`;
+            });
+
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            line.setAttribute('d', linePath);
+            line.setAttribute('stroke', color);
+            line.setAttribute('class', 'chart-line');
+            svg.appendChild(line);
+
+            // Dots and labels
+            data.forEach((d, i) => {
+                const x = padding.left + i * xScale;
+                const y = height - padding.bottom - (d.value - minValue + valueRange * 0.1) * yScale;
+
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', x);
+                circle.setAttribute('cy', y);
+                circle.setAttribute('r', 4);
+                circle.setAttribute('fill', color);
+                circle.setAttribute('class', 'chart-dot');
+                circle.style.cursor = 'pointer';
+
+                circle.addEventListener('mouseenter', (e) => {
+                    const rect = svg.getBoundingClientRect();
+                    tooltip.style.left = (e.clientX - rect.left + 10) + 'px';
+                    tooltip.style.top = (e.clientY - rect.top - 30) + 'px';
+                    tooltip.textContent = isCurrency ? 
+                        `${d.month}: ${d.value.toLocaleString('ru-RU')} ₽` : 
+                        `${d.month}: ${d.value.toLocaleString('ru-RU')}`;
+                    tooltip.classList.add('visible');
+                });
+
+                circle.addEventListener('mouseleave', () => {
+                    tooltip.classList.remove('visible');
+                });
+
+                svg.appendChild(circle);
+
+                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                label.setAttribute('x', x);
+                label.setAttribute('y', height - padding.bottom + 20);
+                label.setAttribute('text-anchor', 'middle');
+                label.setAttribute('class', 'chart-label');
+                label.textContent = d.month;
+                svg.appendChild(label);
+            });
+        }
+
+        function updateGauge(percentage) {
+            const gaugeFill = document.getElementById('gauge-fill');
+            const gaugeValue = document.getElementById('gauge-value');
+            
+            const rotation = 225 + (percentage / 100) * 180;
+            gaugeFill.style.transform = `rotate(${rotation}deg)`;
+            gaugeValue.textContent = percentage + '%';
+
+            if (percentage < 30) {
+                gaugeFill.style.borderBottomColor = '#10b981';
+                gaugeFill.style.borderLeftColor = '#10b981';
+                gaugeValue.style.color = '#10b981';
+            } else if (percentage < 60) {
+                gaugeFill.style.borderBottomColor = '#f59e0b';
+                gaugeFill.style.borderLeftColor = '#f59e0b';
+                gaugeValue.style.color = '#f59e0b';
+            } else {
+                gaugeFill.style.borderBottomColor = '#ef4444';
+                gaugeFill.style.borderLeftColor = '#ef4444';
+                gaugeValue.style.color = '#ef4444';
+            }
+        }
+
+        function initCharts() {
+            drawChart('credit-chart', creditData, '#60a5fa', 'credit-tooltip');
+            drawChart('payment-chart', paymentData, '#a78bfa', 'payment-tooltip');
+            drawChart('debt-chart', debtData, '#ef4444', 'debt-tooltip');
+            updateGauge(68);
+        }
+
+        async function onConfigChange(config) {
+            const pageTitle = document.getElementById('page-title');
+            const riskTitle = document.getElementById('risk-title');
+            const creditTitle = document.getElementById('credit-title');
+            const paymentTitle = document.getElementById('payment-title');
+            const debtTitle = document.getElementById('debt-title');
+
+            const fontFamily = config.font_family || defaultConfig.font_family;
+            const fontSize = config.font_size || defaultConfig.font_size;
+            const baseFontStack = '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+
+            document.body.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
+
+            pageTitle.textContent = config.page_title || defaultConfig.page_title;
+            pageTitle.style.fontSize = `${fontSize * 2.25}px`;
+            pageTitle.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
+
+            riskTitle.textContent = config.risk_title || defaultConfig.risk_title;
+            riskTitle.style.fontSize = `${fontSize * 1.25}px`;
+            riskTitle.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
+
+            creditTitle.textContent = config.credit_chart_title || defaultConfig.credit_chart_title;
+            creditTitle.style.fontSize = `${fontSize * 1.25}px`;
+            creditTitle.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
+
+            paymentTitle.textContent = config.payment_chart_title || defaultConfig.payment_chart_title;
+            paymentTitle.style.fontSize = `${fontSize * 1.25}px`;
+            paymentTitle.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
+
+            debtTitle.textContent = config.debt_chart_title || defaultConfig.debt_chart_title;
+            debtTitle.style.fontSize = `${fontSize * 1.25}px`;
+            debtTitle.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
+
+            const backgroundColor = config.background_color || defaultConfig.background_color;
+            const cardColor = config.card_color || defaultConfig.card_color;
+            const primaryColor = config.primary_color || defaultConfig.primary_color;
+            const textColor = config.text_color || defaultConfig.text_color;
+
+            document.body.style.background = `linear-gradient(135deg, ${backgroundColor} 0%, ${cardColor} 100%)`;
+            document.body.style.color = textColor;
+
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.style.background = `rgba(30, 41, 59, 0.8)`;
+            });
+        }
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange,
+                mapToCapabilities: (config) => ({
+                    recolorables: [
+                        {
+                            get: () => config.background_color || defaultConfig.background_color,
+                            set: (value) => {
+                                config.background_color = value;
+                                window.elementSdk.setConfig({ background_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.card_color || defaultConfig.card_color,
+                            set: (value) => {
+                                config.card_color = value;
+                                window.elementSdk.setConfig({ card_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.text_color || defaultConfig.text_color,
+                            set: (value) => {
+                                config.text_color = value;
+                                window.elementSdk.setConfig({ text_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.primary_color || defaultConfig.primary_color,
+                            set: (value) => {
+                                config.primary_color = value;
+                                window.elementSdk.setConfig({ primary_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.secondary_color || defaultConfig.secondary_color,
+                            set: (value) => {
+                                config.secondary_color = value;
+                                window.elementSdk.setConfig({ secondary_color: value });
+                            }
+                        }
+                    ],
+                    borderables: [],
+                    fontEditable: {
+                        get: () => config.font_family || defaultConfig.font_family,
+                        set: (value) => {
+                            config.font_family = value;
+                            window.elementSdk.setConfig({ font_family: value });
+                        }
+                    },
+                    fontSizeable: {
+                        get: () => config.font_size || defaultConfig.font_size,
+                        set: (value) => {
+                            config.font_size = value;
+                            window.elementSdk.setConfig({ font_size: value });
+                        }
+                    }
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ["page_title", config.page_title || defaultConfig.page_title],
+                    ["risk_title", config.risk_title || defaultConfig.risk_title],
+                    ["credit_chart_title", config.credit_chart_title || defaultConfig.credit_chart_title],
+                    ["payment_chart_title", config.payment_chart_title || defaultConfig.payment_chart_title],
+                    ["debt_chart_title", config.debt_chart_title || defaultConfig.debt_chart_title]
+                ])
+            });
+        }
+
+        window.addEventListener('load', initCharts);
+        window.addEventListener('resize', initCharts);
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a6263a8e35f9bf8',t:'MTc2NDQyMjI4OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

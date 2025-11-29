@@ -1,0 +1,1072 @@
+<!doctype html>
+<html lang="ru">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bank Admin Analytics</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1d3a 100%);
+            color: #e2e8f0;
+            width: 100%;
+            min-height: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            padding: 30px 20px;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .main-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .timestamp {
+            background: rgba(96, 165, 250, 0.15);
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #60a5fa;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .toggle-group {
+            display: flex;
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 10px;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+            overflow: hidden;
+        }
+
+        .toggle-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(96, 165, 250, 0.1);
+            color: #60a5fa;
+        }
+
+        .toggle-btn.active {
+            background: rgba(96, 165, 250, 0.2);
+            color: #60a5fa;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-toggle {
+            background: rgba(96, 165, 250, 0.15);
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 12px;
+            color: #60a5fa;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .metric-toggle:hover {
+            background: rgba(96, 165, 250, 0.25);
+        }
+
+        .metric-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .metric-change {
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .metric-change.positive {
+            color: #10b981;
+        }
+
+        .metric-change.negative {
+            color: #ef4444;
+        }
+
+        .chart-card {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 16px;
+            padding: 28px;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin: 0;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            position: relative;
+        }
+
+        .chart-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .chart-grid-line {
+            stroke: rgba(148, 163, 184, 0.1);
+            stroke-width: 1;
+        }
+
+        .chart-label {
+            fill: #94a3b8;
+            font-size: 11px;
+        }
+
+        .chart-line {
+            fill: none;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .chart-area {
+            opacity: 0.15;
+        }
+
+        .chart-dot {
+            transition: r 0.2s;
+            cursor: pointer;
+        }
+
+        .chart-dot:hover {
+            r: 6;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 1000;
+            white-space: nowrap;
+        }
+
+        .tooltip.visible {
+            opacity: 1;
+        }
+
+        .search-container {
+            margin-bottom: 24px;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 50px 14px 20px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(100, 116, 139, 0.2);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: #64748b;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 20px;
+        }
+
+        .client-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        .client-info-card {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 16px;
+            padding: 28px;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .client-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .client-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin: 0 0 8px 0;
+        }
+
+        .client-id {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        .client-status {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .status-badge.active {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-badge.warning {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .risk-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .risk-bar {
+            width: 100px;
+            height: 6px;
+            background: rgba(148, 163, 184, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .risk-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease-out;
+        }
+
+        .risk-fill.low {
+            background: #10b981;
+        }
+
+        .risk-fill.medium {
+            background: #f59e0b;
+        }
+
+        .risk-fill.high {
+            background: #ef4444;
+        }
+
+        .gauge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .gauge-wrapper {
+            position: relative;
+            width: 200px;
+            height: 100px;
+        }
+
+        .gauge-bg {
+            position: absolute;
+            width: 200px;
+            height: 100px;
+            overflow: hidden;
+        }
+
+        .gauge-fill {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 24px solid transparent;
+            border-bottom-color: #ef4444;
+            border-left-color: #ef4444;
+            transform: rotate(225deg);
+            transition: transform 1s ease-out;
+        }
+
+        .gauge-track {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 24px solid rgba(148, 163, 184, 0.15);
+            border-bottom-color: transparent;
+            border-left-color: transparent;
+            transform: rotate(45deg);
+        }
+
+        .gauge-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .gauge-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ef4444;
+        }
+
+        .gauge-label {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        @media (min-width: 768px) {
+            .client-grid {
+                grid-template-columns: 350px 1fr;
+            }
+
+            .charts-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <main class="container">
+   <header class="header">
+    <h1 class="main-title" id="page-title">Админ-панель банка</h1>
+    <div class="timestamp">
+     Обновлено: Сегодня, 14:23
+    </div>
+   </header>
+   <section class="section">
+    <div class="section-header">
+     <h2 class="section-title">
+      <div class="section-icon">
+       📊
+      </div><span id="overview-title">Общая аналитика</span></h2>
+     <div class="controls">
+      <div class="toggle-group"><button class="toggle-btn active" data-period="day">День</button> <button class="toggle-btn" data-period="week">Неделя</button> <button class="toggle-btn" data-period="month">Месяц</button> <button class="toggle-btn" data-period="year">Год</button>
+      </div>
+     </div>
+    </div>
+    <div class="metrics-grid">
+     <div class="metric-card">
+      <div class="metric-header">
+       <div class="metric-label">
+        Выдано кредитов
+       </div><button class="metric-toggle" data-metric="credit">₽</button>
+      </div>
+      <div class="metric-value" id="credit-value">
+       8.4 млрд ₽
+      </div>
+      <div class="metric-change positive">
+       ↑ +12.5% за период
+      </div>
+     </div>
+     <div class="metric-card">
+      <div class="metric-header">
+       <div class="metric-label">
+        Общий доход
+       </div><button class="metric-toggle" data-metric="income">₽</button>
+      </div>
+      <div class="metric-value" id="income-value">
+       342 млн ₽
+      </div>
+      <div class="metric-change positive">
+       ↑ +8.3% за период
+      </div>
+     </div>
+     <div class="metric-card">
+      <div class="metric-header">
+       <div class="metric-label">
+        Всего клиентов
+       </div>
+      </div>
+      <div class="metric-value">
+       12,458
+      </div>
+      <div class="metric-change positive">
+       ↑ +324 за период
+      </div>
+     </div>
+     <div class="metric-card">
+      <div class="metric-header">
+       <div class="metric-label">
+        Клиенты в дефолте
+       </div>
+      </div>
+      <div class="metric-value">
+       523
+      </div>
+      <div class="metric-change negative">
+       4.2% от общего числа
+      </div>
+     </div>
+    </div>
+    <div class="chart-card">
+     <div class="chart-header">
+      <h3 class="chart-title">Кредитная активность</h3>
+     </div>
+     <div class="chart-container">
+      <svg class="chart-svg" id="activity-chart"></svg>
+      <div class="tooltip" id="activity-tooltip"></div>
+     </div>
+    </div>
+   </section>
+   <section class="section">
+    <div class="section-header">
+     <h2 class="section-title">
+      <div class="section-icon">
+       👤
+      </div><span id="client-section-title">Аналитика клиента</span></h2>
+    </div>
+    <div class="search-container">
+     <div class="search-box"><input type="text" class="search-input" id="search-input" placeholder="Поиск по имени, ID или договору..."> <span class="search-icon">🔍</span>
+     </div>
+    </div>
+    <div class="client-grid">
+     <div class="client-info-card">
+      <div class="client-header">
+       <div>
+        <h3 class="client-name">Иванов Иван Иванович</h3>
+        <div class="client-id">
+         ID: CLT-2024-001
+        </div>
+       </div>
+       <div class="client-status"><span class="status-badge warning">Высокий риск</span>
+        <div class="risk-indicator">
+         Риск: 68% 
+         <div class="risk-bar">
+          <div class="risk-fill high" style="width: 68%"></div>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="gauge-container">
+       <div class="gauge-wrapper">
+        <div class="gauge-bg">
+         <div class="gauge-track"></div>
+         <div class="gauge-fill" id="gauge-fill"></div>
+        </div>
+        <div class="gauge-center">
+         <div class="gauge-value" id="gauge-value">
+          68%
+         </div>
+         <div class="gauge-label">
+          Риск дефолта
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div>
+      <div class="section-header" style="margin-bottom: 16px;">
+       <div class="controls">
+        <div class="toggle-group"><button class="toggle-btn active" data-view="absolute">Числа</button> <button class="toggle-btn" data-view="percent">%</button>
+        </div>
+        <div class="toggle-group"><button class="toggle-btn active" data-client-period="month">Месяц</button> <button class="toggle-btn" data-client-period="quarter">Квартал</button> <button class="toggle-btn" data-client-period="year">Год</button>
+        </div>
+       </div>
+      </div>
+      <div class="charts-grid">
+       <div class="chart-card">
+        <h3 class="chart-title">Динамика кредитов</h3>
+        <div class="chart-container" style="height: 200px;">
+         <svg class="chart-svg" id="credit-chart"></svg>
+         <div class="tooltip" id="credit-tooltip"></div>
+        </div>
+       </div>
+       <div class="chart-card">
+        <h3 class="chart-title">Ежемесячные платежи</h3>
+        <div class="chart-container" style="height: 200px;">
+         <svg class="chart-svg" id="payment-chart"></svg>
+         <div class="tooltip" id="payment-tooltip"></div>
+        </div>
+       </div>
+       <div class="chart-card">
+        <h3 class="chart-title">Текущий долг</h3>
+        <div class="chart-container" style="height: 200px;">
+         <svg class="chart-svg" id="debt-chart"></svg>
+         <div class="tooltip" id="debt-tooltip"></div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+  </main>
+  <script>
+        const defaultConfig = {
+            page_title: "Админ-панель банка",
+            overview_title: "Общая аналитика",
+            client_section_title: "Аналитика клиента",
+            search_placeholder: "Поиск по имени, ID или договору...",
+            background_color: "#0a0e27",
+            card_color: "#1e293b",
+            primary_color: "#60a5fa",
+            secondary_color: "#a78bfa",
+            text_color: "#e2e8f0",
+            font_family: "Inter",
+            font_size: 16
+        };
+
+        let currentViewMode = 'absolute';
+        let currentMetrics = {
+            credit: { value: 8.4, unit: 'млрд ₽', percent: 12.5, showPercent: false },
+            income: { value: 342, unit: 'млн ₽', percent: 8.3, showPercent: false }
+        };
+
+        const activityData = {
+            day: [
+                { label: '00:00', value: 450 },
+                { label: '04:00', value: 320 },
+                { label: '08:00', value: 680 },
+                { label: '12:00', value: 920 },
+                { label: '16:00', value: 850 },
+                { label: '20:00', value: 640 }
+            ],
+            week: [
+                { label: 'Пн', value: 5200 },
+                { label: 'Вт', value: 5800 },
+                { label: 'Ср', value: 5400 },
+                { label: 'Чт', value: 6100 },
+                { label: 'Пт', value: 6500 },
+                { label: 'Сб', value: 4200 },
+                { label: 'Вс', value: 3800 }
+            ],
+            month: [
+                { label: 'Нед 1', value: 32000 },
+                { label: 'Нед 2', value: 38000 },
+                { label: 'Нед 3', value: 35000 },
+                { label: 'Нед 4', value: 41000 }
+            ],
+            year: [
+                { label: 'Янв', value: 120000 },
+                { label: 'Фев', value: 135000 },
+                { label: 'Мар', value: 128000 },
+                { label: 'Апр', value: 145000 },
+                { label: 'Май', value: 158000 },
+                { label: 'Июн', value: 152000 },
+                { label: 'Июл', value: 168000 },
+                { label: 'Авг', value: 162000 },
+                { label: 'Сен', value: 175000 },
+                { label: 'Окт', value: 182000 },
+                { label: 'Ноя', value: 178000 },
+                { label: 'Дек', value: 195000 }
+            ]
+        };
+
+        const creditData = [
+            { month: 'Янв', value: 500000, percent: 15 },
+            { month: 'Фев', value: 520000, percent: 12 },
+            { month: 'Мар', value: 480000, percent: 8 },
+            { month: 'Апр', value: 510000, percent: 18 },
+            { month: 'Май', value: 550000, percent: 22 },
+            { month: 'Июн', value: 530000, percent: 16 },
+            { month: 'Июл', value: 560000, percent: 25 },
+            { month: 'Авг', value: 545000, percent: 20 }
+        ];
+
+        const paymentData = [
+            { month: 'Янв', value: 25000, percent: 95 },
+            { month: 'Фев', value: 25000, percent: 95 },
+            { month: 'Мар', value: 15000, percent: 60 },
+            { month: 'Апр', value: 25000, percent: 95 },
+            { month: 'Май', value: 20000, percent: 80 },
+            { month: 'Июн', value: 10000, percent: 40 },
+            { month: 'Июл', value: 25000, percent: 95 },
+            { month: 'Авг', value: 18000, percent: 72 }
+        ];
+
+        const debtData = [
+            { month: 'Янв', value: 320000, percent: 64 },
+            { month: 'Фев', value: 315000, percent: 63 },
+            { month: 'Мар', value: 325000, percent: 65 },
+            { month: 'Апр', value: 310000, percent: 62 },
+            { month: 'Май', value: 340000, percent: 68 },
+            { month: 'Июн', value: 360000, percent: 72 },
+            { month: 'Июл', value: 345000, percent: 69 },
+            { month: 'Авг', value: 372000, percent: 74 }
+        ];
+
+        function drawChart(svgId, data, color, tooltipId, isPercent = false) {
+            const svg = document.getElementById(svgId);
+            const tooltip = document.getElementById(tooltipId);
+            const padding = { top: 20, right: 20, bottom: 40, left: 50 };
+            const width = svg.clientWidth;
+            const height = svg.clientHeight;
+            const chartWidth = width - padding.left - padding.right;
+            const chartHeight = height - padding.top - padding.bottom;
+
+            svg.innerHTML = '';
+
+            const values = data.map(d => isPercent ? d.percent : d.value);
+            const maxValue = Math.max(...values);
+            const minValue = Math.min(...values);
+            const valueRange = maxValue - minValue;
+            const yScale = chartHeight / (valueRange * 1.2);
+            const xScale = chartWidth / (data.length - 1);
+
+            for (let i = 0; i <= 4; i++) {
+                const y = padding.top + (chartHeight / 4) * i;
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', padding.left);
+                line.setAttribute('y1', y);
+                line.setAttribute('x2', width - padding.right);
+                line.setAttribute('y2', y);
+                line.setAttribute('class', 'chart-grid-line');
+                svg.appendChild(line);
+
+                const value = maxValue - (valueRange / 4) * i;
+                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                label.setAttribute('x', padding.left - 8);
+                label.setAttribute('y', y + 4);
+                label.setAttribute('text-anchor', 'end');
+                label.setAttribute('class', 'chart-label');
+                label.textContent = isPercent ? value.toFixed(0) + '%' : (value / 1000).toFixed(0) + 'К';
+                svg.appendChild(label);
+            }
+
+            let areaPath = `M ${padding.left} ${height - padding.bottom}`;
+            data.forEach((d, i) => {
+                const val = isPercent ? d.percent : d.value;
+                const x = padding.left + i * xScale;
+                const y = height - padding.bottom - (val - minValue + valueRange * 0.1) * yScale;
+                areaPath += ` L ${x} ${y}`;
+            });
+            areaPath += ` L ${padding.left + (data.length - 1) * xScale} ${height - padding.bottom} Z`;
+
+            const area = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            area.setAttribute('d', areaPath);
+            area.setAttribute('fill', color);
+            area.setAttribute('class', 'chart-area');
+            svg.appendChild(area);
+
+            let linePath = '';
+            data.forEach((d, i) => {
+                const val = isPercent ? d.percent : d.value;
+                const x = padding.left + i * xScale;
+                const y = height - padding.bottom - (val - minValue + valueRange * 0.1) * yScale;
+                linePath += (i === 0 ? 'M' : ' L') + ` ${x} ${y}`;
+            });
+
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            line.setAttribute('d', linePath);
+            line.setAttribute('stroke', color);
+            line.setAttribute('class', 'chart-line');
+            svg.appendChild(line);
+
+            data.forEach((d, i) => {
+                const val = isPercent ? d.percent : d.value;
+                const x = padding.left + i * xScale;
+                const y = height - padding.bottom - (val - minValue + valueRange * 0.1) * yScale;
+
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', x);
+                circle.setAttribute('cy', y);
+                circle.setAttribute('r', 4);
+                circle.setAttribute('fill', color);
+                circle.setAttribute('class', 'chart-dot');
+
+                circle.addEventListener('mouseenter', (e) => {
+                    const rect = svg.getBoundingClientRect();
+                    tooltip.style.left = (e.clientX - rect.left + 10) + 'px';
+                    tooltip.style.top = (e.clientY - rect.top - 30) + 'px';
+                    
+                    if (isPercent) {
+                        tooltip.textContent = `${d.month || d.label}: ${d.percent}%`;
+                    } else {
+                        tooltip.textContent = `${d.month || d.label}: ${d.value.toLocaleString('ru-RU')} ₽`;
+                    }
+                    tooltip.classList.add('visible');
+                });
+
+                circle.addEventListener('mouseleave', () => {
+                    tooltip.classList.remove('visible');
+                });
+
+                svg.appendChild(circle);
+
+                const labelText = d.month || d.label;
+                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                label.setAttribute('x', x);
+                label.setAttribute('y', height - padding.bottom + 20);
+                label.setAttribute('text-anchor', 'middle');
+                label.setAttribute('class', 'chart-label');
+                label.textContent = labelText;
+                svg.appendChild(label);
+            });
+        }
+
+        function updateGauge(percentage) {
+            const gaugeFill = document.getElementById('gauge-fill');
+            const gaugeValue = document.getElementById('gauge-value');
+            
+            const rotation = 225 + (percentage / 100) * 180;
+            gaugeFill.style.transform = `rotate(${rotation}deg)`;
+            gaugeValue.textContent = percentage + '%';
+
+            if (percentage < 30) {
+                gaugeFill.style.borderBottomColor = '#10b981';
+                gaugeFill.style.borderLeftColor = '#10b981';
+                gaugeValue.style.color = '#10b981';
+            } else if (percentage < 60) {
+                gaugeFill.style.borderBottomColor = '#f59e0b';
+                gaugeFill.style.borderLeftColor = '#f59e0b';
+                gaugeValue.style.color = '#f59e0b';
+            } else {
+                gaugeFill.style.borderBottomColor = '#ef4444';
+                gaugeFill.style.borderLeftColor = '#ef4444';
+                gaugeValue.style.color = '#ef4444';
+            }
+        }
+
+        function initCharts() {
+            drawChart('activity-chart', activityData.day, '#60a5fa', 'activity-tooltip');
+            
+            const isPercent = currentViewMode === 'percent';
+            drawChart('credit-chart', creditData, '#60a5fa', 'credit-tooltip', isPercent);
+            drawChart('payment-chart', paymentData, '#a78bfa', 'payment-tooltip', isPercent);
+            drawChart('debt-chart', debtData, '#ef4444', 'debt-tooltip', isPercent);
+            
+            updateGauge(68);
+        }
+
+        document.querySelectorAll('.toggle-btn[data-period]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.toggle-btn[data-period]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const period = btn.dataset.period;
+                drawChart('activity-chart', activityData[period], '#60a5fa', 'activity-tooltip');
+            });
+        });
+
+        document.querySelectorAll('.toggle-btn[data-view]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.toggle-btn[data-view]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentViewMode = btn.dataset.view;
+                
+                const isPercent = currentViewMode === 'percent';
+                drawChart('credit-chart', creditData, '#60a5fa', 'credit-tooltip', isPercent);
+                drawChart('payment-chart', paymentData, '#a78bfa', 'payment-tooltip', isPercent);
+                drawChart('debt-chart', debtData, '#ef4444', 'debt-tooltip', isPercent);
+            });
+        });
+
+        document.querySelectorAll('.metric-toggle').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const metric = btn.dataset.metric;
+                const data = currentMetrics[metric];
+                data.showPercent = !data.showPercent;
+                
+                const valueEl = document.getElementById(`${metric}-value`);
+                if (data.showPercent) {
+                    valueEl.textContent = `+${data.percent}%`;
+                    btn.textContent = '%';
+                } else {
+                    valueEl.textContent = `${data.value} ${data.unit}`;
+                    btn.textContent = '₽';
+                }
+            });
+        });
+
+        async function onConfigChange(config) {
+            const fontFamily = config.font_family || defaultConfig.font_family;
+            const fontSize = config.font_size || defaultConfig.font_size;
+            const baseFontStack = '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+
+            document.body.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
+
+            const pageTitle = document.getElementById('page-title');
+            pageTitle.textContent = config.page_title || defaultConfig.page_title;
+            pageTitle.style.fontSize = `${fontSize * 2}px`;
+            pageTitle.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
+
+            const overviewTitle = document.getElementById('overview-title');
+            overviewTitle.textContent = config.overview_title || defaultConfig.overview_title;
+            overviewTitle.style.fontSize = `${fontSize * 1.5}px`;
+            overviewTitle.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
+
+            const clientTitle = document.getElementById('client-section-title');
+            clientTitle.textContent = config.client_section_title || defaultConfig.client_section_title;
+            clientTitle.style.fontSize = `${fontSize * 1.5}px`;
+            clientTitle.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
+
+            const searchInput = document.getElementById('search-input');
+            searchInput.placeholder = config.search_placeholder || defaultConfig.search_placeholder;
+            searchInput.style.fontSize = `${fontSize}px`;
+            searchInput.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
+
+            const backgroundColor = config.background_color || defaultConfig.background_color;
+            const cardColor = config.card_color || defaultConfig.card_color;
+            const textColor = config.text_color || defaultConfig.text_color;
+
+            document.body.style.background = `linear-gradient(135deg, ${backgroundColor} 0%, ${cardColor} 100%)`;
+            document.body.style.color = textColor;
+        }
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange,
+                mapToCapabilities: (config) => ({
+                    recolorables: [
+                        {
+                            get: () => config.background_color || defaultConfig.background_color,
+                            set: (value) => {
+                                config.background_color = value;
+                                window.elementSdk.setConfig({ background_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.card_color || defaultConfig.card_color,
+                            set: (value) => {
+                                config.card_color = value;
+                                window.elementSdk.setConfig({ card_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.text_color || defaultConfig.text_color,
+                            set: (value) => {
+                                config.text_color = value;
+                                window.elementSdk.setConfig({ text_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.primary_color || defaultConfig.primary_color,
+                            set: (value) => {
+                                config.primary_color = value;
+                                window.elementSdk.setConfig({ primary_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.secondary_color || defaultConfig.secondary_color,
+                            set: (value) => {
+                                config.secondary_color = value;
+                                window.elementSdk.setConfig({ secondary_color: value });
+                            }
+                        }
+                    ],
+                    borderables: [],
+                    fontEditable: {
+                        get: () => config.font_family || defaultConfig.font_family,
+                        set: (value) => {
+                            config.font_family = value;
+                            window.elementSdk.setConfig({ font_family: value });
+                        }
+                    },
+                    fontSizeable: {
+                        get: () => config.font_size || defaultConfig.font_size,
+                        set: (value) => {
+                            config.font_size = value;
+                            window.elementSdk.setConfig({ font_size: value });
+                        }
+                    }
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ["page_title", config.page_title || defaultConfig.page_title],
+                    ["overview_title", config.overview_title || defaultConfig.overview_title],
+                    ["client_section_title", config.client_section_title || defaultConfig.client_section_title],
+                    ["search_placeholder", config.search_placeholder || defaultConfig.search_placeholder]
+                ])
+            });
+        }
+
+        window.addEventListener('load', initCharts);
+        window.addEventListener('resize', initCharts);
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a6232dad4659bf8',t:'MTc2NDQyMDI4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
