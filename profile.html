@@ -3,7 +3,7 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Profile</title>
+  <title>University Profile</title>
   <script src="/_sdk/element_sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -14,276 +14,234 @@
     * {
       box-sizing: border-box;
     }
-
-    body {
-      margin: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    
+    .page-background {
+      min-height: 100%;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     }
-
-    .profile-avatar {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 48px;
-      font-weight: 700;
-      color: white;
-      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
-      margin: 0 auto;
-    }
-
+    
     .card {
-      background: #1a1d2e;
-      border-radius: 16px;
-      padding: 28px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-      border: 1px solid #2a2d3e;
-      margin-bottom: 20px;
-      width: 100%;
+      background: linear-gradient(145deg, #1e293b 0%, #334155 100%);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     }
-
+    
     .subject-item {
-      background: #22253a;
-      border-radius: 12px;
-      padding: 16px 20px;
-      margin-bottom: 12px;
-      border: 1px solid #2a2d3e;
+      background: rgba(15, 23, 42, 0.6);
       transition: all 0.2s ease;
     }
-
+    
     .subject-item:hover {
-      background: #2a2d44;
-      border-color: #667eea;
+      background: rgba(15, 23, 42, 0.8);
+      transform: translateX(4px);
     }
-
-    .subject-item:last-child {
-      margin-bottom: 0;
-    }
-
+    
     .edit-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      background: #667eea;
-      border: none;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      background: rgba(59, 130, 246, 0.15);
       transition: all 0.2s ease;
-      vertical-align: middle;
-      margin-left: 8px;
     }
-
+    
     .edit-btn:hover {
-      background: #5568d3;
-      transform: scale(1.05);
+      background: rgba(59, 130, 246, 0.25);
+      transform: scale(1.1);
     }
-
-    .qr-code {
-      width: 200px;
-      height: 200px;
-      background: white;
-      border-radius: 12px;
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto;
+    
+    .avatar-container {
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
     }
-
-    .subjects-container {
-      max-height: 450px;
+    
+    .subjects-list {
+      max-height: 400px;
       overflow-y: auto;
-      padding-right: 4px;
     }
-
-    .subjects-container::-webkit-scrollbar {
+    
+    .subjects-list::-webkit-scrollbar {
       width: 6px;
     }
-
-    .subjects-container::-webkit-scrollbar-track {
-      background: #22253a;
-      border-radius: 10px;
+    
+    .subjects-list::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.3);
+      border-radius: 3px;
     }
-
-    .subjects-container::-webkit-scrollbar-thumb {
-      background: #667eea;
-      border-radius: 10px;
+    
+    .subjects-list::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.4);
+      border-radius: 3px;
     }
-
-    .subjects-container::-webkit-scrollbar-thumb:hover {
-      background: #5568d3;
-    }
-
-    @media (max-width: 640px) {
-      .card {
-        padding: 24px 20px;
-      }
-      
-      .profile-avatar {
-        width: 100px;
-        height: 100px;
-        font-size: 40px;
-      }
+    
+    .subjects-list::-webkit-scrollbar-thumb:hover {
+      background: rgba(59, 130, 246, 0.6);
     }
   </style>
   <style>@view-transition { navigation: auto; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
  <body class="h-full">
-  <main class="h-full w-full" style="background: #0f1117; color: #e4e4e7; overflow-auto;">
-   <div style="max-width: 480px; margin: 0 auto; padding: 24px 20px;"><!-- Profile Card -->
-    <article class="card">
-     <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
-      <div class="profile-avatar" id="avatar" aria-label="Student avatar">
-       AD
-      </div>
-      <div style="text-align: center; width: 100%;">
-       <h1 id="student-name" style="font-size: 26px; font-weight: 700; margin: 0 0 10px 0; color: #f4f4f5;">Amirov Damir</h1>
-       <div style="display: inline-flex; align-items: center; justify-content: center;"><span id="student-group" style="font-size: 16px; color: #a1a1aa;">SEN2-25</span> <button class="edit-btn" aria-label="Edit direction">
-         <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path> <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+  <main class="page-background w-full h-full overflow-auto">
+   <div class="flex justify-center px-4 py-8"><!-- Single centered column -->
+    <div class="w-full max-w-md space-y-6"><!-- Profile Card -->
+     <article class="card rounded-2xl p-8"><!-- Avatar -->
+      <div class="flex justify-center mb-6">
+       <div class="avatar-container w-28 h-28 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center"><span class="text-white text-5xl font-bold" id="avatar-initials">AD</span>
+       </div>
+      </div><!-- Student Info -->
+      <div class="text-center space-y-3">
+       <h1 class="text-3xl font-bold text-white" id="student-name">Amirov Damir</h1>
+       <div class="flex items-center justify-center gap-2"><span class="text-blue-400 text-xl font-semibold" id="student-group">SEN2-25</span> <button class="edit-btn p-2 rounded-lg" aria-label="Edit direction">
+         <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
          </svg></button>
        </div>
+       <div class="pt-4 mt-4 border-t border-slate-700">
+        <p class="text-slate-400 text-sm">Student ID Card</p>
+       </div>
       </div>
-     </div>
-    </article><!-- Subjects Card -->
-    <article class="card">
-     <h2 id="subjects-title" style="font-size: 20px; font-weight: 600; margin: 0 0 20px 0; color: #f4f4f5;">Subjects (2024-2025)</h2>
-     <div class="subjects-container" id="subjects-list"><!-- Subjects will be inserted here -->
-     </div>
-    </article><!-- QR Code Card -->
-    <article class="card" style="margin-bottom: 0; text-align: center;">
-     <h3 id="qr-title" style="font-size: 20px; font-weight: 600; margin: 0 0 8px 0; color: #f4f4f5;">Download Mobile App</h3>
-     <p id="qr-subtitle" style="margin: 0 0 24px 0; color: #a1a1aa; font-size: 14px; line-height: 1.5;">Scan to install the university mobile application</p>
-     <div class="qr-code">
-      <svg id="qr-code" width="168" height="168" aria-label="QR code for mobile app"></svg>
-     </div>
-    </article>
+     </article><!-- Subjects Card -->
+     <article class="card rounded-2xl p-6">
+      <header class="mb-5">
+       <h2 class="text-2xl font-bold text-white">Subjects <span class="text-blue-400" id="academic-year">(2024-2025)</span></h2>
+      </header>
+      <div class="subjects-list space-y-3" id="subjects-container"><!-- Subjects will be rendered here -->
+      </div>
+     </article><!-- QR Code Card -->
+     <article class="card rounded-2xl p-8">
+      <div class="text-center space-y-5">
+       <header>
+        <h3 class="text-2xl font-bold text-white mb-2" id="qr-title">Download Mobile App</h3>
+        <p class="text-slate-400 text-sm" id="qr-subtitle">Scan to install the university mobile application</p>
+       </header><!-- QR Code -->
+       <div class="flex justify-center pt-2">
+        <div class="bg-white p-4 rounded-xl">
+         <svg width="180" height="180" viewbox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="180" height="180" fill="white" /> <!-- Top-left positioning square --> <rect x="10" y="10" width="50" height="50" fill="black" /> <rect x="20" y="20" width="30" height="30" fill="white" /> <rect x="25" y="25" width="20" height="20" fill="black" /> <!-- Top-right positioning square --> <rect x="120" y="10" width="50" height="50" fill="black" /> <rect x="130" y="20" width="30" height="30" fill="white" /> <rect x="135" y="25" width="20" height="20" fill="black" /> <!-- Bottom-left positioning square --> <rect x="10" y="120" width="50" height="50" fill="black" /> <rect x="20" y="130" width="30" height="30" fill="white" /> <rect x="25" y="135" width="20" height="20" fill="black" /> <!-- QR data pattern --> <rect x="70" y="10" width="10" height="10" fill="black" /> <rect x="80" y="10" width="10" height="10" fill="black" /> <rect x="100" y="10" width="10" height="10" fill="black" /> <rect x="10" y="70" width="10" height="10" fill="black" /> <rect x="30" y="70" width="10" height="10" fill="black" /> <rect x="50" y="70" width="10" height="10" fill="black" /> <rect x="70" y="30" width="10" height="10" fill="black" /> <rect x="90" y="30" width="10" height="10" fill="black" /> <rect x="110" y="30" width="10" height="10" fill="black" /> <rect x="70" y="50" width="10" height="10" fill="black" /> <rect x="80" y="50" width="10" height="10" fill="black" /> <rect x="100" y="50" width="10" height="10" fill="black" /> <rect x="110" y="50" width="10" height="10" fill="black" /> <rect x="70" y="70" width="10" height="10" fill="black" /> <rect x="90" y="70" width="10" height="10" fill="black" /> <rect x="110" y="70" width="10" height="10" fill="black" /> <rect x="130" y="70" width="10" height="10" fill="black" /> <rect x="150" y="70" width="10" height="10" fill="black" /> <rect x="160" y="70" width="10" height="10" fill="black" /> <rect x="70" y="90" width="10" height="10" fill="black" /> <rect x="80" y="90" width="10" height="10" fill="black" /> <rect x="100" y="90" width="10" height="10" fill="black" /> <rect x="120" y="90" width="10" height="10" fill="black" /> <rect x="140" y="90" width="10" height="10" fill="black" /> <rect x="70" y="110" width="10" height="10" fill="black" /> <rect x="90" y="110" width="10" height="10" fill="black" /> <rect x="100" y="110" width="10" height="10" fill="black" /> <rect x="130" y="110" width="10" height="10" fill="black" /> <rect x="150" y="110" width="10" height="10" fill="black" /> <rect x="170" y="110" width="10" height="10" fill="black" /> <rect x="70" y="130" width="10" height="10" fill="black" /> <rect x="80" y="130" width="10" height="10" fill="black" /> <rect x="110" y="130" width="10" height="10" fill="black" /> <rect x="130" y="130" width="10" height="10" fill="black" /> <rect x="160" y="130" width="10" height="10" fill="black" /> <rect x="70" y="150" width="10" height="10" fill="black" /> <rect x="90" y="150" width="10" height="10" fill="black" /> <rect x="110" y="150" width="10" height="10" fill="black" /> <rect x="120" y="150" width="10" height="10" fill="black" /> <rect x="140" y="150" width="10" height="10" fill="black" /> <rect x="160" y="150" width="10" height="10" fill="black" /> <rect x="170" y="150" width="10" height="10" fill="black" /> <rect x="70" y="170" width="10" height="10" fill="black" /> <rect x="80" y="170" width="10" height="10" fill="black" /> <rect x="100" y="170" width="10" height="10" fill="black" /> <rect x="120" y="170" width="10" height="10" fill="black" /> <rect x="130" y="170" width="10" height="10" fill="black" /> <rect x="150" y="170" width="10" height="10" fill="black" />
+         </svg>
+        </div>
+       </div>
+      </div>
+     </article>
+    </div>
    </div>
   </main>
   <script>
     const defaultConfig = {
       student_name: "Amirov Damir",
       student_group: "SEN2-25",
-      academic_year: "2024-2025",
+      academic_year: "(2024-2025)",
       qr_title: "Download Mobile App",
       qr_subtitle: "Scan to install the university mobile application",
-      background_color: "#0f1117",
-      card_color: "#1a1d2e",
-      text_color: "#f4f4f5",
-      accent_color: "#667eea",
-      secondary_text_color: "#a1a1aa"
+      background_color: "#0f172a",
+      card_color: "#1e293b",
+      text_color: "#ffffff",
+      accent_color: "#3b82f6",
+      secondary_text_color: "#94a3b8",
+      font_family: "system-ui",
+      font_size: 16
     };
 
+    // Sample subjects data
     const subjects = [
-      { name: "Advanced Programming", semester: "Fall 2024" },
+      { name: "Advanced Mathematics", semester: "Fall 2024" },
       { name: "Data Structures & Algorithms", semester: "Fall 2024" },
       { name: "Computer Networks", semester: "Fall 2024" },
-      { name: "Database Management Systems", semester: "Fall 2024" },
       { name: "Software Engineering", semester: "Fall 2024" },
-      { name: "Operating Systems", semester: "Spring 2025" },
-      { name: "Web Development", semester: "Spring 2025" },
-      { name: "Mobile Application Development", semester: "Spring 2025" },
-      { name: "Artificial Intelligence", semester: "Spring 2025" },
-      { name: "Cybersecurity Fundamentals", semester: "Spring 2025" }
+      { name: "Database Management Systems", semester: "Fall 2024" },
+      { name: "Web Technologies", semester: "Fall 2024" },
+      { name: "Operating Systems", semester: "Fall 2024" },
+      { name: "Artificial Intelligence", semester: "Fall 2024" }
     ];
 
-    function generateQRCode(svgElement) {
-      const size = 168;
-      const moduleSize = 6;
-      
-      svgElement.innerHTML = '';
-      svgElement.setAttribute('viewBox', `0 0 ${size} ${size}`);
-      
-      const qrPattern = [
-        [1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,1,1],
-        [1,0,0,0,0,0,1,0,0,1,0,1,0,0,1,0,0,0,0,0,1],
-        [1,0,1,1,1,0,1,0,1,1,0,0,1,0,1,0,1,1,1,0,1],
-        [1,0,1,1,1,0,1,0,0,1,1,0,0,0,1,0,1,1,1,0,1],
-        [1,0,1,1,1,0,1,0,1,0,1,1,0,0,1,0,1,1,1,0,1],
-        [1,0,0,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,0,0,1],
-        [1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,1,1],
-        [0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0],
-        [1,0,1,1,0,1,1,1,0,1,0,1,1,0,1,0,1,0,1,1,0],
-        [0,1,0,0,1,0,0,0,1,0,1,1,0,1,0,1,0,1,0,0,1],
-        [1,1,1,0,0,1,1,1,0,0,1,0,1,0,1,1,0,0,1,1,0],
-        [0,0,0,1,1,0,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1],
-        [1,1,1,0,1,1,1,1,0,1,1,0,0,0,1,0,0,1,1,0,0],
-        [0,0,0,0,0,0,0,0,1,0,1,1,0,1,0,1,1,0,1,1,1],
-        [1,1,1,1,1,1,1,0,0,1,0,1,1,0,1,0,0,1,0,0,0],
-        [1,0,0,0,0,0,1,0,1,1,1,0,0,1,0,1,1,0,1,1,1],
-        [1,0,1,1,1,0,1,0,0,0,1,1,1,0,1,1,0,0,0,1,0],
-        [1,0,1,1,1,0,1,0,1,0,0,1,0,1,0,0,1,1,1,0,1],
-        [1,0,1,1,1,0,1,0,0,1,1,0,1,0,1,0,0,1,0,1,0],
-        [1,0,0,0,0,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1],
-        [1,1,1,1,1,1,1,0,0,0,1,1,1,0,1,1,0,1,0,1,0]
-      ];
-
-      for (let i = 0; i < qrPattern.length; i++) {
-        for (let j = 0; j < qrPattern[i].length; j++) {
-          if (qrPattern[i][j] === 1) {
-            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-            rect.setAttribute('x', j * moduleSize + 10);
-            rect.setAttribute('y', i * moduleSize + 10);
-            rect.setAttribute('width', moduleSize);
-            rect.setAttribute('height', moduleSize);
-            rect.setAttribute('fill', '#000000');
-            svgElement.appendChild(rect);
-          }
-        }
+    function getInitials(name) {
+      const parts = name.trim().split(' ');
+      if (parts.length >= 2) {
+        return (parts[0][0] + parts[1][0]).toUpperCase();
       }
+      return name.substring(0, 2).toUpperCase();
     }
 
     function renderSubjects() {
-      const container = document.getElementById('subjects-list');
+      const container = document.getElementById('subjects-container');
       container.innerHTML = subjects.map(subject => `
-        <div class="subject-item">
-          <div style="font-weight: 600; color: #f4f4f5; margin-bottom: 4px; font-size: 15px;">${subject.name}</div>
-          <div style="font-size: 13px; color: #a1a1aa;">${subject.semester}</div>
+        <div class="subject-item rounded-lg p-4">
+          <h3 class="text-white text-base font-semibold mb-1">${subject.name}</h3>
+          <p class="text-slate-400 text-sm">${subject.semester}</p>
         </div>
       `).join('');
     }
 
-    function getInitials(name) {
-      return name.split(' ').map(n => n[0]).join('').toUpperCase();
-    }
-
     async function onConfigChange(config) {
-      const name = config.student_name || defaultConfig.student_name;
-      const group = config.student_group || defaultConfig.student_group;
-      const year = config.academic_year || defaultConfig.academic_year;
-      const qrTitle = config.qr_title || defaultConfig.qr_title;
-      const qrSubtitle = config.qr_subtitle || defaultConfig.qr_subtitle;
+      const customFont = config.font_family || defaultConfig.font_family;
+      const baseSize = config.font_size || defaultConfig.font_size;
+      const baseFontStack = 'system-ui, -apple-system, sans-serif';
+      const fontFamily = `${customFont}, ${baseFontStack}`;
+      
+      // Update font family
+      document.body.style.fontFamily = fontFamily;
+      
+      // Update text content and sizes
+      const studentNameEl = document.getElementById('student-name');
+      studentNameEl.textContent = config.student_name || defaultConfig.student_name;
+      studentNameEl.style.fontSize = `${baseSize * 1.875}px`;
+      studentNameEl.style.fontFamily = fontFamily;
+      
+      const studentGroupEl = document.getElementById('student-group');
+      studentGroupEl.textContent = config.student_group || defaultConfig.student_group;
+      studentGroupEl.style.fontSize = `${baseSize * 1.25}px`;
+      studentGroupEl.style.fontFamily = fontFamily;
+      
+      const academicYearEl = document.getElementById('academic-year');
+      academicYearEl.textContent = config.academic_year || defaultConfig.academic_year;
+      academicYearEl.style.fontSize = `${baseSize * 1.5}px`;
+      academicYearEl.style.fontFamily = fontFamily;
+      
+      const qrTitleEl = document.getElementById('qr-title');
+      qrTitleEl.textContent = config.qr_title || defaultConfig.qr_title;
+      qrTitleEl.style.fontSize = `${baseSize * 1.5}px`;
+      qrTitleEl.style.fontFamily = fontFamily;
+      
+      const qrSubtitleEl = document.getElementById('qr-subtitle');
+      qrSubtitleEl.textContent = config.qr_subtitle || defaultConfig.qr_subtitle;
+      qrSubtitleEl.style.fontSize = `${baseSize * 0.875}px`;
+      qrSubtitleEl.style.fontFamily = fontFamily;
+      
+      // Update avatar initials
+      const initialsEl = document.getElementById('avatar-initials');
+      initialsEl.textContent = getInitials(config.student_name || defaultConfig.student_name);
+      
+      // Update colors
       const backgroundColor = config.background_color || defaultConfig.background_color;
+      const cardColor = config.card_color || defaultConfig.card_color;
       const textColor = config.text_color || defaultConfig.text_color;
+      const accentColor = config.accent_color || defaultConfig.accent_color;
       const secondaryTextColor = config.secondary_text_color || defaultConfig.secondary_text_color;
       
-      const initials = getInitials(name);
+      // Apply background gradient
+      const pageBackground = document.querySelector('.page-background');
+      pageBackground.style.background = `linear-gradient(135deg, ${backgroundColor} 0%, ${cardColor} 100%)`;
       
-      document.getElementById('avatar').textContent = initials;
-      document.getElementById('student-name').textContent = name;
-      document.getElementById('student-name').style.color = textColor;
-      document.getElementById('student-group').textContent = group;
-      document.getElementById('student-group').style.color = secondaryTextColor;
-      document.getElementById('subjects-title').textContent = `Subjects (${year})`;
-      document.getElementById('subjects-title').style.color = textColor;
-      document.getElementById('qr-title').textContent = qrTitle;
-      document.getElementById('qr-title').style.color = textColor;
-      document.getElementById('qr-subtitle').textContent = qrSubtitle;
-      document.getElementById('qr-subtitle').style.color = secondaryTextColor;
+      // Apply card backgrounds
+      document.querySelectorAll('.card').forEach(card => {
+        card.style.background = `linear-gradient(145deg, ${cardColor} 0%, ${cardColor}dd 100%)`;
+      });
       
-      document.querySelector('main').style.background = backgroundColor;
+      // Apply text colors
+      document.querySelectorAll('h1, h2, h3').forEach(heading => {
+        heading.style.color = textColor;
+      });
+      
+      // Apply accent color
+      document.querySelectorAll('.text-blue-400').forEach(el => {
+        el.style.color = accentColor;
+      });
+      
+      document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.style.background = `${accentColor}26`;
+      });
+      
+      document.querySelector('.avatar-container').style.background = `linear-gradient(135deg, ${accentColor} 0%, ${accentColor}cc 100%)`;
+      
+      // Apply secondary text color
+      document.querySelectorAll('.text-slate-400').forEach(el => {
+        el.style.color = secondaryTextColor;
+      });
     }
 
-    // Initialize
-    renderSubjects();
-    generateQRCode(document.getElementById('qr-code'));
-
-    // Initialize Element SDK
     if (window.elementSdk) {
       window.elementSdk.init({
         defaultConfig,
@@ -327,8 +285,20 @@
             }
           ],
           borderables: [],
-          fontEditable: undefined,
-          fontSizeable: undefined
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (value) => {
+              config.font_family = value;
+              window.elementSdk.setConfig({ font_family: value });
+            }
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (value) => {
+              config.font_size = value;
+              window.elementSdk.setConfig({ font_size: value });
+            }
+          }
         }),
         mapToEditPanelValues: (config) => new Map([
           ["student_name", config.student_name || defaultConfig.student_name],
@@ -339,6 +309,10 @@
         ])
       });
     }
+
+    // Initialize
+    renderSubjects();
+    onConfigChange(defaultConfig);
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b27edd5b5541961',t:'MTc2NjQ5MzY0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b2fc04ea6121961',t:'MTc2NjU3NTY2NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
