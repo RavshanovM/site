@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Profile</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #1a1d2e;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      border: 1px solid #2a2d3e;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .subject-item {
+      background: #22253a;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      border: 1px solid #2a2d3e;
+      transition: all 0.2s ease;
+    }
+
+    .subject-item:hover {
+      background: #2a2d44;
+      border-color: #667eea;
+    }
+
+    .subject-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .edit-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #667eea;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      vertical-align: middle;
+      margin-left: 8px;
+    }
+
+    .edit-btn:hover {
+      background: #5568d3;
+      transform: scale(1.05);
+    }
+
+    .qr-code {
+      width: 200px;
+      height: 200px;
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+    }
+
+    .subjects-container {
+      max-height: 450px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .subjects-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .subjects-container::-webkit-scrollbar-track {
+      background: #22253a;
+      border-radius: 10px;
+    }
+
+    .subjects-container::-webkit-scrollbar-thumb {
+      background: #667eea;
+      border-radius: 10px;
+    }
+
+    .subjects-container::-webkit-scrollbar-thumb:hover {
+      background: #5568d3;
+    }
+
+    @media (max-width: 640px) {
+      .card {
+        padding: 24px 20px;
+      }
+      
+      .profile-avatar {
+        width: 100px;
+        height: 100px;
+        font-size: 40px;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <main class="h-full w-full" style="background: #0f1117; color: #e4e4e7; overflow-auto;">
+   <div style="max-width: 480px; margin: 0 auto; padding: 24px 20px;"><!-- Profile Card -->
+    <article class="card">
+     <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+      <div class="profile-avatar" id="avatar" aria-label="Student avatar">
+       AD
+      </div>
+      <div style="text-align: center; width: 100%;">
+       <h1 id="student-name" style="font-size: 26px; font-weight: 700; margin: 0 0 10px 0; color: #f4f4f5;">Amirov Damir</h1>
+       <div style="display: inline-flex; align-items: center; justify-content: center;"><span id="student-group" style="font-size: 16px; color: #a1a1aa;">SEN2-25</span> <button class="edit-btn" aria-label="Edit direction">
+         <svg width="16" height="16" viewbox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path> <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+         </svg></button>
+       </div>
+      </div>
+     </div>
+    </article><!-- Subjects Card -->
+    <article class="card">
+     <h2 id="subjects-title" style="font-size: 20px; font-weight: 600; margin: 0 0 20px 0; color: #f4f4f5;">Subjects (2024-2025)</h2>
+     <div class="subjects-container" id="subjects-list"><!-- Subjects will be inserted here -->
+     </div>
+    </article><!-- QR Code Card -->
+    <article class="card" style="margin-bottom: 0; text-align: center;">
+     <h3 id="qr-title" style="font-size: 20px; font-weight: 600; margin: 0 0 8px 0; color: #f4f4f5;">Download Mobile App</h3>
+     <p id="qr-subtitle" style="margin: 0 0 24px 0; color: #a1a1aa; font-size: 14px; line-height: 1.5;">Scan to install the university mobile application</p>
+     <div class="qr-code">
+      <svg id="qr-code" width="168" height="168" aria-label="QR code for mobile app"></svg>
+     </div>
+    </article>
+   </div>
+  </main>
+  <script>
+    const defaultConfig = {
+      student_name: "Amirov Damir",
+      student_group: "SEN2-25",
+      academic_year: "2024-2025",
+      qr_title: "Download Mobile App",
+      qr_subtitle: "Scan to install the university mobile application",
+      background_color: "#0f1117",
+      card_color: "#1a1d2e",
+      text_color: "#f4f4f5",
+      accent_color: "#667eea",
+      secondary_text_color: "#a1a1aa"
+    };
+
+    const subjects = [
+      { name: "Advanced Programming", semester: "Fall 2024" },
+      { name: "Data Structures & Algorithms", semester: "Fall 2024" },
+      { name: "Computer Networks", semester: "Fall 2024" },
+      { name: "Database Management Systems", semester: "Fall 2024" },
+      { name: "Software Engineering", semester: "Fall 2024" },
+      { name: "Operating Systems", semester: "Spring 2025" },
+      { name: "Web Development", semester: "Spring 2025" },
+      { name: "Mobile Application Development", semester: "Spring 2025" },
+      { name: "Artificial Intelligence", semester: "Spring 2025" },
+      { name: "Cybersecurity Fundamentals", semester: "Spring 2025" }
+    ];
+
+    function generateQRCode(svgElement) {
+      const size = 168;
+      const moduleSize = 6;
+      
+      svgElement.innerHTML = '';
+      svgElement.setAttribute('viewBox', `0 0 ${size} ${size}`);
+      
+      const qrPattern = [
+        [1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,1,1],
+        [1,0,0,0,0,0,1,0,0,1,0,1,0,0,1,0,0,0,0,0,1],
+        [1,0,1,1,1,0,1,0,1,1,0,0,1,0,1,0,1,1,1,0,1],
+        [1,0,1,1,1,0,1,0,0,1,1,0,0,0,1,0,1,1,1,0,1],
+        [1,0,1,1,1,0,1,0,1,0,1,1,0,0,1,0,1,1,1,0,1],
+        [1,0,0,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,0,0,1],
+        [1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,1,1],
+        [0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0],
+        [1,0,1,1,0,1,1,1,0,1,0,1,1,0,1,0,1,0,1,1,0],
+        [0,1,0,0,1,0,0,0,1,0,1,1,0,1,0,1,0,1,0,0,1],
+        [1,1,1,0,0,1,1,1,0,0,1,0,1,0,1,1,0,0,1,1,0],
+        [0,0,0,1,1,0,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1],
+        [1,1,1,0,1,1,1,1,0,1,1,0,0,0,1,0,0,1,1,0,0],
+        [0,0,0,0,0,0,0,0,1,0,1,1,0,1,0,1,1,0,1,1,1],
+        [1,1,1,1,1,1,1,0,0,1,0,1,1,0,1,0,0,1,0,0,0],
+        [1,0,0,0,0,0,1,0,1,1,1,0,0,1,0,1,1,0,1,1,1],
+        [1,0,1,1,1,0,1,0,0,0,1,1,1,0,1,1,0,0,0,1,0],
+        [1,0,1,1,1,0,1,0,1,0,0,1,0,1,0,0,1,1,1,0,1],
+        [1,0,1,1,1,0,1,0,0,1,1,0,1,0,1,0,0,1,0,1,0],
+        [1,0,0,0,0,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1],
+        [1,1,1,1,1,1,1,0,0,0,1,1,1,0,1,1,0,1,0,1,0]
+      ];
+
+      for (let i = 0; i < qrPattern.length; i++) {
+        for (let j = 0; j < qrPattern[i].length; j++) {
+          if (qrPattern[i][j] === 1) {
+            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.setAttribute('x', j * moduleSize + 10);
+            rect.setAttribute('y', i * moduleSize + 10);
+            rect.setAttribute('width', moduleSize);
+            rect.setAttribute('height', moduleSize);
+            rect.setAttribute('fill', '#000000');
+            svgElement.appendChild(rect);
+          }
+        }
+      }
+    }
+
+    function renderSubjects() {
+      const container = document.getElementById('subjects-list');
+      container.innerHTML = subjects.map(subject => `
+        <div class="subject-item">
+          <div style="font-weight: 600; color: #f4f4f5; margin-bottom: 4px; font-size: 15px;">${subject.name}</div>
+          <div style="font-size: 13px; color: #a1a1aa;">${subject.semester}</div>
+        </div>
+      `).join('');
+    }
+
+    function getInitials(name) {
+      return name.split(' ').map(n => n[0]).join('').toUpperCase();
+    }
+
+    async function onConfigChange(config) {
+      const name = config.student_name || defaultConfig.student_name;
+      const group = config.student_group || defaultConfig.student_group;
+      const year = config.academic_year || defaultConfig.academic_year;
+      const qrTitle = config.qr_title || defaultConfig.qr_title;
+      const qrSubtitle = config.qr_subtitle || defaultConfig.qr_subtitle;
+      const backgroundColor = config.background_color || defaultConfig.background_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const secondaryTextColor = config.secondary_text_color || defaultConfig.secondary_text_color;
+      
+      const initials = getInitials(name);
+      
+      document.getElementById('avatar').textContent = initials;
+      document.getElementById('student-name').textContent = name;
+      document.getElementById('student-name').style.color = textColor;
+      document.getElementById('student-group').textContent = group;
+      document.getElementById('student-group').style.color = secondaryTextColor;
+      document.getElementById('subjects-title').textContent = `Subjects (${year})`;
+      document.getElementById('subjects-title').style.color = textColor;
+      document.getElementById('qr-title').textContent = qrTitle;
+      document.getElementById('qr-title').style.color = textColor;
+      document.getElementById('qr-subtitle').textContent = qrSubtitle;
+      document.getElementById('qr-subtitle').style.color = secondaryTextColor;
+      
+      document.querySelector('main').style.background = backgroundColor;
+    }
+
+    // Initialize
+    renderSubjects();
+    generateQRCode(document.getElementById('qr-code'));
+
+    // Initialize Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => {
+                config.background_color = value;
+                window.elementSdk.setConfig({ background_color: value });
+              }
+            },
+            {
+              get: () => config.card_color || defaultConfig.card_color,
+              set: (value) => {
+                config.card_color = value;
+                window.elementSdk.setConfig({ card_color: value });
+              }
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => {
+                config.text_color = value;
+                window.elementSdk.setConfig({ text_color: value });
+              }
+            },
+            {
+              get: () => config.accent_color || defaultConfig.accent_color,
+              set: (value) => {
+                config.accent_color = value;
+                window.elementSdk.setConfig({ accent_color: value });
+              }
+            },
+            {
+              get: () => config.secondary_text_color || defaultConfig.secondary_text_color,
+              set: (value) => {
+                config.secondary_text_color = value;
+                window.elementSdk.setConfig({ secondary_text_color: value });
+              }
+            }
+          ],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ["student_name", config.student_name || defaultConfig.student_name],
+          ["student_group", config.student_group || defaultConfig.student_group],
+          ["academic_year", config.academic_year || defaultConfig.academic_year],
+          ["qr_title", config.qr_title || defaultConfig.qr_title],
+          ["qr_subtitle", config.qr_subtitle || defaultConfig.qr_subtitle]
+        ])
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b27edd5b5541961',t:'MTc2NjQ5MzY0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
