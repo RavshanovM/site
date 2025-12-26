@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>University Timetable Registration</title>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.6s ease-out forwards;
+    }
+    
+    .slide-in {
+      animation: slideIn 0.4s ease-out forwards;
+    }
+    
+    .step-content {
+      opacity: 0;
+    }
+    
+    .step-content.active {
+      opacity: 1;
+      animation: fadeIn 0.6s ease-out forwards;
+    }
+    
+    .direction-card, .group-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+    
+    .direction-card:hover, .group-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 25px -5px rgba(139, 92, 246, 0.2), 0 10px 10px -5px rgba(139, 92, 246, 0.1);
+    }
+    
+    .direction-card.selected, .group-card.selected {
+      background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+      border-color: #8b5cf6;
+      transform: translateY(-2px);
+    }
+    
+    .auth-button {
+      transition: all 0.3s ease;
+    }
+    
+    .auth-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.3);
+    }
+    
+    input:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+    }
+    
+    .progress-dot {
+      transition: all 0.3s ease;
+    }
+    
+    .progress-dot.active {
+      background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+      width: 2rem;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full bg-gray-950 text-gray-100 overflow-auto">
+  <div id="app" class="w-full h-full flex flex-col items-center justify-center p-6 relative"><!-- Progress Indicator -->
+   <div id="progress-indicator" class="fixed top-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-50">
+    <div class="progress-dot w-8 h-2 rounded-full bg-gray-700 active"></div>
+    <div class="progress-dot w-2 h-2 rounded-full bg-gray-700"></div>
+    <div class="progress-dot w-2 h-2 rounded-full bg-gray-700"></div>
+    <div class="progress-dot w-2 h-2 rounded-full bg-gray-700"></div>
+    <div class="progress-dot w-2 h-2 rounded-full bg-gray-700"></div>
+    <div class="progress-dot w-2 h-2 rounded-full bg-gray-700"></div>
+   </div><!-- Step 1: Welcome -->
+   <div id="step-1" class="step-content active max-w-2xl w-full text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+    <div class="bg-gray-900 rounded-3xl p-12 shadow-2xl border border-gray-800">
+     <h1 id="welcome-title" class="text-5xl font-bold mb-6 bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">Let's build your study day</h1>
+     <p id="welcome-subtitle" class="text-xl text-gray-400 mb-12">Your timetable, saved for every visit</p><button id="start-btn" class="auth-button bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white px-12 py-4 rounded-xl text-lg font-semibold w-full max-w-xs mx-auto"> Start </button>
+    </div>
+   </div><!-- Step 2: Direction Selection -->
+   <div id="step-2" class="step-content max-w-5xl w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+    <div class="text-center mb-12">
+     <h2 class="text-4xl font-bold mb-4 text-white">Choose your direction</h2>
+     <p class="text-gray-400 text-lg">Select your field of study</p>
+    </div>
+    <div id="directions-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"><!-- Directions will be inserted here -->
+    </div>
+   </div><!-- Step 3: Group Selection -->
+   <div id="step-3" class="step-content max-w-5xl w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+    <div class="text-center mb-12"><button id="back-to-directions" class="text-violet-400 hover:text-violet-300 mb-4 flex items-center gap-2 mx-auto"> <span>←</span> Back to directions </button>
+     <h2 class="text-4xl font-bold mb-4 text-white">Select your group</h2>
+     <p id="selected-direction-name" class="text-gray-400 text-lg"></p>
+    </div>
+    <div id="groups-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"><!-- Groups will be inserted here -->
+    </div>
+   </div><!-- Step 4: Sign In Method -->
+   <div id="step-4" class="step-content max-w-md w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+    <div class="bg-gray-900 rounded-3xl p-10 shadow-2xl border border-gray-800">
+     <h2 class="text-3xl font-bold mb-3 text-center text-white">Sign in to continue</h2>
+     <p class="text-gray-400 text-center mb-8">Connect your account to save your timetable</p>
+     <div class="space-y-4"><button class="auth-button w-full bg-gray-800 hover:bg-gray-750 border border-gray-700 text-white py-4 rounded-xl font-semibold flex items-center justify-center gap-3"> <span class="text-xl">🎓</span> Continue with LMS </button> <button class="auth-button w-full bg-gray-800 hover:bg-gray-750 border border-gray-700 text-white py-4 rounded-xl font-semibold flex items-center justify-center gap-3"> <span class="text-xl">G</span> Continue with Google </button> <button id="email-method-btn" class="auth-button w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white py-4 rounded-xl font-semibold"> Use email instead </button>
+     </div>
+    </div>
+   </div><!-- Step 5: Account Creation -->
+   <div id="step-5" class="step-content max-w-md w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+    <div class="bg-gray-900 rounded-3xl p-10 shadow-2xl border border-gray-800">
+     <h2 class="text-3xl font-bold mb-3 text-center text-white">Create your account</h2>
+     <p class="text-gray-400 text-center mb-8">Just a few details to get started</p>
+     <form id="registration-form" class="space-y-5">
+      <div><label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email</label> <input type="email" id="email" required class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500" placeholder="your.email@university.edu">
+      </div>
+      <div><label for="password" class="block text-sm font-medium text-gray-300 mb-2">Password</label> <input type="password" id="password" required class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500" placeholder="••••••••">
+      </div>
+      <div><label for="confirm-password" class="block text-sm font-medium text-gray-300 mb-2">Confirm Password</label> <input type="password" id="confirm-password" required class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500" placeholder="••••••••">
+      </div>
+      <div id="error-message" class="text-red-400 text-sm text-center hidden"></div><button type="submit" id="create-account-btn" class="auth-button w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white py-4 rounded-xl font-semibold mt-6"> Create Account </button>
+     </form>
+    </div>
+   </div><!-- Step 6: Confirmation -->
+   <div id="step-6" class="step-content max-w-2xl w-full text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+    <div class="bg-gray-900 rounded-3xl p-12 shadow-2xl border border-gray-800">
+     <div class="text-6xl mb-6">
+      ✨
+     </div>
+     <h1 id="confirmation-title" class="text-5xl font-bold mb-6 bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent">Your timetable is ready</h1>
+     <p class="text-xl text-gray-400 mb-12">Welcome aboard! Let's organize your academic journey</p><button id="finish-btn" class="auth-button bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white px-12 py-4 rounded-xl text-lg font-semibold w-full max-w-xs mx-auto"> Go to Timetable </button>
+    </div>
+   </div>
+  </div>
+  <script>
+    const directions = [
+      { code: 'ME', name: 'Mechanical Engineering', groups: ['MEN1-25', 'MEN2-25', 'MEN3-25', 'MEN4-25', 'MEZ1-25', 'ME-24', 'ME-23', 'ME-22'] },
+      { code: 'SE', name: 'Software Engineering', groups: ['SEN1-25', 'SEN2-25', 'SEN3-25', 'SEN4-25', 'SEZ1-25', 'SEZ2-25', 'SE-24', 'SE-23', 'SE-22'] },
+      { code: 'IT', name: 'Information Technology', groups: ['ITN1-25', 'ITN2-25', 'ITN3-25', 'ITZ1-25', 'IT-24', 'IT-23', 'IT-22'] },
+      { code: 'AD', name: 'Administration', groups: ['ADN1-25', 'ADN2-25', 'ADN3-25', 'AD-24', 'AD-23'] },
+      { code: 'BM', name: 'Business Management', groups: ['BMN1-25', 'BMN2-25', 'BMN3-25', 'BMN4-25', 'BM-24', 'BM-23', 'BM-22'] },
+      { code: 'CIE', name: 'Civil and Infrastructure Engineering', groups: ['CIEN1-25', 'CIEN2-25', 'CIEN3-25', 'CIE-24', 'CIE-23', 'CIE-22'] },
+      { code: 'AE', name: 'Aerospace Engineering', groups: ['AEN1-25', 'AEN2-25', 'AEN3-25', 'AE-24', 'AE-23'] }
+    ];
+
+    let currentStep = 1;
+    let selectedDirection = null;
+    let selectedGroup = null;
+    let isSubmitting = false;
+
+    const defaultConfig = {
+      welcome_title: "Let's build your study day",
+      welcome_subtitle: "Your timetable, saved for every visit",
+      start_button: "Start",
+      confirmation_title: "Your timetable is ready",
+      confirmation_button: "Go to Timetable",
+      background_color: "#030712",
+      surface_color: "#111827",
+      text_color: "#f3f4f6",
+      primary_action_color: "#8b5cf6",
+      secondary_action_color: "#6366f1",
+      font_family: "ui-sans-serif, system-ui, sans-serif",
+      font_size: 16
+    };
+
+    const dataHandler = {
+      onDataChanged(data) {
+        console.log('Registration data updated:', data.length, 'records');
+      }
+    };
+
+    async function initializeSDKs() {
+      const dataResult = await window.dataSdk.init(dataHandler);
+      if (!dataResult.isOk) {
+        console.error("Failed to initialize data SDK");
+      }
+
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (config) => {
+            const customFont = config.font_family || defaultConfig.font_family;
+            const baseSize = config.font_size || defaultConfig.font_size;
+            const baseFontStack = 'ui-sans-serif, system-ui, sans-serif';
+            const bgColor = config.background_color || defaultConfig.background_color;
+            const surfaceColor = config.surface_color || defaultConfig.surface_color;
+            const textColor = config.text_color || defaultConfig.text_color;
+            const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+
+            document.body.style.backgroundColor = bgColor;
+            document.body.style.color = textColor;
+            document.body.style.fontFamily = `${customFont}, ${baseFontStack}`;
+            document.body.style.fontSize = `${baseSize}px`;
+
+            const welcomeTitle = document.getElementById('welcome-title');
+            if (welcomeTitle) {
+              welcomeTitle.textContent = config.welcome_title || defaultConfig.welcome_title;
+              welcomeTitle.style.fontSize = `${baseSize * 3.125}px`;
+            }
+
+            const welcomeSubtitle = document.getElementById('welcome-subtitle');
+            if (welcomeSubtitle) {
+              welcomeSubtitle.textContent = config.welcome_subtitle || defaultConfig.welcome_subtitle;
+              welcomeSubtitle.style.fontSize = `${baseSize * 1.25}px`;
+            }
+
+            const startBtn = document.getElementById('start-btn');
+            if (startBtn) {
+              startBtn.textContent = config.start_button || defaultConfig.start_button;
+            }
+
+            const confirmationTitle = document.getElementById('confirmation-title');
+            if (confirmationTitle) {
+              confirmationTitle.textContent = config.confirmation_title || defaultConfig.confirmation_title;
+              confirmationTitle.style.fontSize = `${baseSize * 3.125}px`;
+            }
+
+            const finishBtn = document.getElementById('finish-btn');
+            if (finishBtn) {
+              finishBtn.textContent = config.confirmation_button || defaultConfig.confirmation_button;
+            }
+
+            document.querySelectorAll('.bg-gray-900').forEach(el => {
+              el.style.backgroundColor = surfaceColor;
+            });
+
+            document.querySelectorAll('h1, h2, h3').forEach(el => {
+              el.style.fontFamily = `${customFont}, ${baseFontStack}`;
+            });
+          },
+          mapToCapabilities: (config) => ({
+            recolorables: [
+              {
+                get: () => config.background_color || defaultConfig.background_color,
+                set: (value) => {
+                  if (window.elementSdk && window.elementSdk.config) {
+                    window.elementSdk.config.background_color = value;
+                    window.elementSdk.setConfig({ background_color: value });
+                  }
+                }
+              },
+              {
+                get: () => config.surface_color || defaultConfig.surface_color,
+                set: (value) => {
+                  if (window.elementSdk && window.elementSdk.config) {
+                    window.elementSdk.config.surface_color = value;
+                    window.elementSdk.setConfig({ surface_color: value });
+                  }
+                }
+              },
+              {
+                get: () => config.text_color || defaultConfig.text_color,
+                set: (value) => {
+                  if (window.elementSdk && window.elementSdk.config) {
+                    window.elementSdk.config.text_color = value;
+                    window.elementSdk.setConfig({ text_color: value });
+                  }
+                }
+              },
+              {
+                get: () => config.primary_action_color || defaultConfig.primary_action_color,
+                set: (value) => {
+                  if (window.elementSdk && window.elementSdk.config) {
+                    window.elementSdk.config.primary_action_color = value;
+                    window.elementSdk.setConfig({ primary_action_color: value });
+                  }
+                }
+              },
+              {
+                get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+                set: (value) => {
+                  if (window.elementSdk && window.elementSdk.config) {
+                    window.elementSdk.config.secondary_action_color = value;
+                    window.elementSdk.setConfig({ secondary_action_color: value });
+                  }
+                }
+              }
+            ],
+            borderables: [],
+            fontEditable: {
+              get: () => config.font_family || defaultConfig.font_family,
+              set: (value) => {
+                if (window.elementSdk && window.elementSdk.config) {
+                  window.elementSdk.config.font_family = value;
+                  window.elementSdk.setConfig({ font_family: value });
+                }
+              }
+            },
+            fontSizeable: {
+              get: () => config.font_size || defaultConfig.font_size,
+              set: (value) => {
+                if (window.elementSdk && window.elementSdk.config) {
+                  window.elementSdk.config.font_size = value;
+                  window.elementSdk.setConfig({ font_size: value });
+                }
+              }
+            }
+          }),
+          mapToEditPanelValues: (config) => new Map([
+            ["welcome_title", config.welcome_title || defaultConfig.welcome_title],
+            ["welcome_subtitle", config.welcome_subtitle || defaultConfig.welcome_subtitle],
+            ["start_button", config.start_button || defaultConfig.start_button],
+            ["confirmation_title", config.confirmation_title || defaultConfig.confirmation_title],
+            ["confirmation_button", config.confirmation_button || defaultConfig.confirmation_button]
+          ])
+        });
+      }
+    }
+
+    function updateProgress(step) {
+      const dots = document.querySelectorAll('.progress-dot');
+      dots.forEach((dot, index) => {
+        if (index < step) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+    }
+
+    function showStep(stepNumber) {
+      document.querySelectorAll('.step-content').forEach(step => {
+        step.classList.remove('active');
+      });
+      
+      const stepElement = document.getElementById(`step-${stepNumber}`);
+      if (stepElement) {
+        stepElement.classList.add('active');
+      }
+      
+      currentStep = stepNumber;
+      updateProgress(stepNumber);
+    }
+
+    function renderDirections() {
+      const grid = document.getElementById('directions-grid');
+      grid.innerHTML = '';
+      
+      directions.forEach(direction => {
+        const card = document.createElement('div');
+        card.className = 'direction-card bg-gray-800 border border-gray-700 rounded-2xl p-6 text-center';
+        card.innerHTML = `
+          <div class="text-3xl font-bold text-violet-400 mb-2">${direction.code}</div>
+          <div class="text-sm text-gray-300">${direction.name}</div>
+        `;
+        
+        card.addEventListener('click', () => {
+          selectedDirection = direction;
+          renderGroups(direction);
+          showStep(3);
+        });
+        
+        grid.appendChild(card);
+      });
+    }
+
+    function renderGroups(direction) {
+      const grid = document.getElementById('groups-grid');
+      const directionName = document.getElementById('selected-direction-name');
+      
+      directionName.textContent = direction.name;
+      grid.innerHTML = '';
+      
+      direction.groups.forEach(group => {
+        const card = document.createElement('div');
+        card.className = 'group-card bg-gray-800 border border-gray-700 rounded-xl p-4 text-center';
+        card.innerHTML = `
+          <div class="font-semibold text-white">${group}</div>
+        `;
+        
+        card.addEventListener('click', () => {
+          document.querySelectorAll('.group-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          selectedGroup = group;
+          
+          setTimeout(() => {
+            showStep(4);
+          }, 400);
+        });
+        
+        grid.appendChild(card);
+      });
+    }
+
+    document.getElementById('start-btn').addEventListener('click', () => {
+      renderDirections();
+      showStep(2);
+    });
+
+    document.getElementById('back-to-directions').addEventListener('click', () => {
+      showStep(2);
+    });
+
+    document.getElementById('email-method-btn').addEventListener('click', () => {
+      showStep(5);
+    });
+
+    document.getElementById('registration-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      if (isSubmitting) return;
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      const errorMessage = document.getElementById('error-message');
+      const submitButton = document.getElementById('create-account-btn');
+      
+      errorMessage.classList.add('hidden');
+      
+      if (password !== confirmPassword) {
+        errorMessage.textContent = 'Passwords do not match';
+        errorMessage.classList.remove('hidden');
+        return;
+      }
+      
+      if (password.length < 8) {
+        errorMessage.textContent = 'Password must be at least 8 characters';
+        errorMessage.classList.remove('hidden');
+        return;
+      }
+      
+      isSubmitting = true;
+      submitButton.disabled = true;
+      submitButton.textContent = 'Creating Account...';
+      submitButton.style.opacity = '0.6';
+      
+      const registrationData = {
+        id: Date.now().toString(),
+        direction: selectedDirection ? selectedDirection.code : '',
+        group: selectedGroup || '',
+        email: email,
+        created_at: new Date().toISOString()
+      };
+      
+      const result = await window.dataSdk.create(registrationData);
+      
+      isSubmitting = false;
+      submitButton.disabled = false;
+      submitButton.textContent = 'Create Account';
+      submitButton.style.opacity = '1';
+      
+      if (result.isOk) {
+        showStep(6);
+      } else {
+        errorMessage.textContent = 'Failed to create account. Please try again.';
+        errorMessage.classList.remove('hidden');
+      }
+    });
+
+    document.getElementById('finish-btn').addEventListener('click', () => {
+      const message = document.createElement('div');
+      message.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 border border-violet-500 rounded-2xl p-8 text-center shadow-2xl fade-in';
+      message.innerHTML = `
+        <div class="text-4xl mb-4">🎓</div>
+        <div class="text-xl font-semibold text-white">Registration Complete!</div>
+        <div class="text-gray-400 mt-2">Your timetable awaits</div>
+      `;
+      document.body.appendChild(message);
+    });
+
+    initializeSDKs();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b42fe80f0bc70c2',t:'MTc2Njc3NzQ0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
