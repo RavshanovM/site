@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timetable Settings</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    .settings-wrapper {
+      min-height: 100%;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    }
+    
+    .settings-card {
+      background: linear-gradient(145deg, #1e293b 0%, #334155 100%);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+    
+    .primary-button {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      transition: all 0.2s ease;
+    }
+    
+    .primary-button:hover {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+      transform: translateY(-1px);
+    }
+    
+    .primary-button:active {
+      transform: translateY(0);
+    }
+    
+    .secondary-button {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      transition: all 0.2s ease;
+    }
+    
+    .secondary-button:hover {
+      background: rgba(59, 130, 246, 0.2);
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+    
+    .status-badge {
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    
+    .avatar-ring {
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+    
+    .subject-item {
+      background: rgba(15, 23, 42, 0.5);
+      transition: all 0.2s ease;
+    }
+    
+    .subject-item:hover {
+      background: rgba(15, 23, 42, 0.7);
+    }
+    
+    .subjects-scroll {
+      max-height: 280px;
+      overflow-y: auto;
+    }
+    
+    .subjects-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    
+    .subjects-scroll::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.3);
+      border-radius: 3px;
+    }
+    
+    .subjects-scroll::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.4);
+      border-radius: 3px;
+    }
+    
+    .email-display {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(51, 65, 85, 0.5);
+    }
+    
+    .security-section {
+      background: rgba(15, 23, 42, 0.3);
+      border-left: 3px solid rgba(59, 130, 246, 0.5);
+    }
+    
+    .telegram-link {
+      transition: all 0.2s ease;
+    }
+    
+    .telegram-link:hover {
+      transform: translateX(4px);
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <main class="settings-wrapper w-full h-full overflow-auto">
+   <div class="flex justify-center px-4 py-8"><!-- Single centered column -->
+    <div class="w-full max-w-md space-y-5"><!-- Card 1: Profile & Saved Group -->
+     <article class="settings-card rounded-2xl p-6">
+      <div class="flex items-start gap-4 mb-5"><!-- Avatar -->
+       <div class="avatar-ring w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0"><span class="text-white text-2xl font-bold" id="avatar-initials">AD</span>
+       </div><!-- Name & Group -->
+       <div class="flex-1 min-w-0">
+        <p class="text-slate-400 text-sm mb-1" id="student-name">Amirov Damir</p>
+        <h1 class="text-white text-2xl font-bold mb-2" id="saved-group">SEN2-25</h1><!-- Status Badge -->
+        <div class="status-badge inline-flex items-center gap-2 px-3 py-1 rounded-full">
+         <svg class="w-4 h-4 text-green-400" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+         </svg><span class="text-green-400 text-xs font-medium" id="status-text">Group saved</span>
+        </div>
+       </div>
+      </div><!-- Change Group Button --> <button class="primary-button w-full py-3 px-4 rounded-xl text-white font-semibold text-base"> Change group </button> <!-- Last Updated -->
+      <p class="text-slate-500 text-xs text-center mt-3" id="last-updated">Last updated: today</p>
+     </article><!-- Card 2: Subjects -->
+     <article class="settings-card rounded-2xl p-6">
+      <header class="mb-4">
+       <h2 class="text-white text-xl font-bold mb-1">Subjects for selected group</h2>
+       <p class="text-slate-400 text-sm" id="subjects-subtitle">Displayed based on your saved group</p>
+      </header>
+      <div class="subjects-scroll space-y-2" id="subjects-container"><!-- Subjects will be rendered here -->
+      </div>
+     </article><!-- Card 3: Account Settings -->
+     <article class="settings-card rounded-2xl p-6">
+      <header class="mb-5">
+       <h2 class="text-white text-xl font-bold" id="account-title">Account settings</h2>
+      </header><!-- Email Section -->
+      <div class="mb-5"><label class="block text-slate-400 text-sm mb-2">Email address</label>
+       <div class="email-display rounded-lg px-4 py-3 mb-3">
+        <p class="text-white text-sm" id="current-email">student@university.edu</p>
+       </div><button class="secondary-button w-full py-3 px-4 rounded-xl text-blue-400 font-semibold text-sm" id="email-button"> Change email </button>
+      </div><!-- Password Section -->
+      <div class="security-section rounded-lg p-4">
+       <div class="flex items-start gap-3 mb-3">
+        <svg class="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+        <div class="flex-1">
+         <h3 class="text-white text-sm font-semibold mb-1">Password</h3>
+         <p class="text-slate-400 text-xs">Keep your account secure</p>
+        </div>
+       </div><button class="secondary-button w-full py-3 px-4 rounded-xl text-blue-400 font-semibold text-sm" id="password-button"> Change password </button>
+      </div>
+     </article><!-- Card 4: Mobile Access -->
+     <article class="settings-card rounded-2xl p-6">
+      <div class="text-center space-y-4">
+       <header>
+        <h3 class="text-white text-xl font-bold mb-1" id="qr-title">Mobile access</h3>
+        <p class="text-slate-400 text-sm" id="qr-subtitle">Quick access to your timetable</p>
+       </header><!-- QR Code -->
+       <div class="flex justify-center pt-2">
+        <div class="bg-white p-3 rounded-xl">
+         <svg width="160" height="160" viewbox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="160" height="160" fill="white" /> <!-- Top-left positioning square --> <rect x="8" y="8" width="44" height="44" fill="black" /> <rect x="16" y="16" width="28" height="28" fill="white" /> <rect x="20" y="20" width="20" height="20" fill="black" /> <!-- Top-right positioning square --> <rect x="108" y="8" width="44" height="44" fill="black" /> <rect x="116" y="16" width="28" height="28" fill="white" /> <rect x="120" y="20" width="20" height="20" fill="black" /> <!-- Bottom-left positioning square --> <rect x="8" y="108" width="44" height="44" fill="black" /> <rect x="16" y="116" width="28" height="28" fill="white" /> <rect x="20" y="120" width="20" height="20" fill="black" /> <!-- QR data pattern --> <rect x="60" y="8" width="8" height="8" fill="black" /> <rect x="68" y="8" width="8" height="8" fill="black" /> <rect x="84" y="8" width="8" height="8" fill="black" /> <rect x="92" y="8" width="8" height="8" fill="black" /> <rect x="8" y="60" width="8" height="8" fill="black" /> <rect x="24" y="60" width="8" height="8" fill="black" /> <rect x="40" y="60" width="8" height="8" fill="black" /> <rect x="60" y="28" width="8" height="8" fill="black" /> <rect x="76" y="28" width="8" height="8" fill="black" /> <rect x="92" y="28" width="8" height="8" fill="black" /> <rect x="60" y="44" width="8" height="8" fill="black" /> <rect x="68" y="44" width="8" height="8" fill="black" /> <rect x="84" y="44" width="8" height="8" fill="black" /> <rect x="92" y="44" width="8" height="8" fill="black" /> <rect x="60" y="60" width="8" height="8" fill="black" /> <rect x="76" y="60" width="8" height="8" fill="black" /> <rect x="92" y="60" width="8" height="8" fill="black" /> <rect x="108" y="60" width="8" height="8" fill="black" /> <rect x="124" y="60" width="8" height="8" fill="black" /> <rect x="132" y="60" width="8" height="8" fill="black" /> <rect x="148" y="60" width="8" height="8" fill="black" /> <rect x="60" y="76" width="8" height="8" fill="black" /> <rect x="68" y="76" width="8" height="8" fill="black" /> <rect x="84" y="76" width="8" height="8" fill="black" /> <rect x="100" y="76" width="8" height="8" fill="black" /> <rect x="116" y="76" width="8" height="8" fill="black" /> <rect x="132" y="76" width="8" height="8" fill="black" /> <rect x="60" y="92" width="8" height="8" fill="black" /> <rect x="76" y="92" width="8" height="8" fill="black" /> <rect x="84" y="92" width="8" height="8" fill="black" /> <rect x="108" y="92" width="8" height="8" fill="black" /> <rect x="124" y="92" width="8" height="8" fill="black" /> <rect x="140" y="92" width="8" height="8" fill="black" /> <rect x="60" y="108" width="8" height="8" fill="black" /> <rect x="68" y="108" width="8" height="8" fill="black" /> <rect x="92" y="108" width="8" height="8" fill="black" /> <rect x="108" y="108" width="8" height="8" fill="black" /> <rect x="132" y="108" width="8" height="8" fill="black" /> <rect x="60" y="124" width="8" height="8" fill="black" /> <rect x="76" y="124" width="8" height="8" fill="black" /> <rect x="92" y="124" width="8" height="8" fill="black" /> <rect x="100" y="124" width="8" height="8" fill="black" /> <rect x="116" y="124" width="8" height="8" fill="black" /> <rect x="132" y="124" width="8" height="8" fill="black" /> <rect x="140" y="124" width="8" height="8" fill="black" /> <rect x="60" y="140" width="8" height="8" fill="black" /> <rect x="68" y="140" width="8" height="8" fill="black" /> <rect x="84" y="140" width="8" height="8" fill="black" /> <rect x="100" y="140" width="8" height="8" fill="black" /> <rect x="108" y="140" width="8" height="8" fill="black" /> <rect x="124" y="140" width="8" height="8" fill="black" /> <rect x="148" y="140" width="8" height="8" fill="black" />
+         </svg>
+        </div>
+       </div>
+      </div>
+     </article><!-- Card 5: Contact -->
+     <article class="settings-card rounded-2xl p-5">
+      <h4 class="text-white text-base font-semibold mb-3" id="contact-title">Contact the creators</h4><a href="https://t.me/timetable_support" target="_blank" rel="noopener noreferrer" class="telegram-link flex items-center gap-3 text-slate-300 hover:text-white"> <!-- Telegram Icon -->
+       <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
+        <svg class="w-5 h-5 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
+        </svg>
+       </div>
+       <div>
+        <p class="text-sm font-medium" id="contact-text">Telegram support</p>
+        <p class="text-blue-400 text-sm" id="contact-handle">@timetable_support</p>
+       </div></a>
+     </article>
+    </div>
+   </div>
+  </main>
+  <script>
+    const defaultConfig = {
+      student_name: "Amirov Damir",
+      saved_group: "SEN2-25",
+      status_text: "Group saved",
+      last_updated: "Last updated: today",
+      subjects_subtitle: "Displayed based on your saved group",
+      account_title: "Account settings",
+      current_email: "student@university.edu",
+      email_button_text: "Change email",
+      password_button_text: "Change password",
+      qr_title: "Mobile access",
+      qr_subtitle: "Quick access to your timetable",
+      contact_title: "Contact the creators",
+      contact_text: "Telegram support",
+      contact_handle: "@timetable_support",
+      background_color: "#0f172a",
+      card_color: "#1e293b",
+      text_color: "#ffffff",
+      primary_color: "#3b82f6",
+      secondary_text_color: "#94a3b8",
+      font_family: "system-ui",
+      font_size: 16
+    };
+
+    // Sample subjects based on saved group
+    const subjects = [
+      "Advanced Mathematics",
+      "Data Structures & Algorithms",
+      "Computer Networks",
+      "Software Engineering",
+      "Database Management Systems",
+      "Web Technologies",
+      "Operating Systems",
+      "Artificial Intelligence"
+    ];
+
+    function getInitials(name) {
+      const parts = name.trim().split(' ');
+      if (parts.length >= 2) {
+        return (parts[0][0] + parts[1][0]).toUpperCase();
+      }
+      return name.substring(0, 2).toUpperCase();
+    }
+
+    function renderSubjects() {
+      const container = document.getElementById('subjects-container');
+      container.innerHTML = subjects.map(subject => `
+        <div class="subject-item rounded-lg px-4 py-3">
+          <p class="text-white text-sm font-medium">${subject}</p>
+        </div>
+      `).join('');
+    }
+
+    async function onConfigChange(config) {
+      const customFont = config.font_family || defaultConfig.font_family;
+      const baseSize = config.font_size || defaultConfig.font_size;
+      const baseFontStack = 'system-ui, -apple-system, sans-serif';
+      const fontFamily = `${customFont}, ${baseFontStack}`;
+      
+      // Update font family
+      document.body.style.fontFamily = fontFamily;
+      
+      // Update text content and sizes
+      const studentNameEl = document.getElementById('student-name');
+      studentNameEl.textContent = config.student_name || defaultConfig.student_name;
+      studentNameEl.style.fontSize = `${baseSize * 0.875}px`;
+      studentNameEl.style.fontFamily = fontFamily;
+      
+      const savedGroupEl = document.getElementById('saved-group');
+      savedGroupEl.textContent = config.saved_group || defaultConfig.saved_group;
+      savedGroupEl.style.fontSize = `${baseSize * 1.5}px`;
+      savedGroupEl.style.fontFamily = fontFamily;
+      
+      const statusTextEl = document.getElementById('status-text');
+      statusTextEl.textContent = config.status_text || defaultConfig.status_text;
+      statusTextEl.style.fontSize = `${baseSize * 0.75}px`;
+      statusTextEl.style.fontFamily = fontFamily;
+      
+      const lastUpdatedEl = document.getElementById('last-updated');
+      lastUpdatedEl.textContent = config.last_updated || defaultConfig.last_updated;
+      lastUpdatedEl.style.fontSize = `${baseSize * 0.75}px`;
+      lastUpdatedEl.style.fontFamily = fontFamily;
+      
+      const subjectsSubtitleEl = document.getElementById('subjects-subtitle');
+      subjectsSubtitleEl.textContent = config.subjects_subtitle || defaultConfig.subjects_subtitle;
+      subjectsSubtitleEl.style.fontSize = `${baseSize * 0.875}px`;
+      subjectsSubtitleEl.style.fontFamily = fontFamily;
+      
+      const accountTitleEl = document.getElementById('account-title');
+      accountTitleEl.textContent = config.account_title || defaultConfig.account_title;
+      accountTitleEl.style.fontSize = `${baseSize * 1.25}px`;
+      accountTitleEl.style.fontFamily = fontFamily;
+      
+      const currentEmailEl = document.getElementById('current-email');
+      currentEmailEl.textContent = config.current_email || defaultConfig.current_email;
+      currentEmailEl.style.fontSize = `${baseSize * 0.875}px`;
+      currentEmailEl.style.fontFamily = fontFamily;
+      
+      const emailButtonEl = document.getElementById('email-button');
+      emailButtonEl.textContent = config.email_button_text || defaultConfig.email_button_text;
+      emailButtonEl.style.fontSize = `${baseSize * 0.875}px`;
+      emailButtonEl.style.fontFamily = fontFamily;
+      
+      const passwordButtonEl = document.getElementById('password-button');
+      passwordButtonEl.textContent = config.password_button_text || defaultConfig.password_button_text;
+      passwordButtonEl.style.fontSize = `${baseSize * 0.875}px`;
+      passwordButtonEl.style.fontFamily = fontFamily;
+      
+      const qrTitleEl = document.getElementById('qr-title');
+      qrTitleEl.textContent = config.qr_title || defaultConfig.qr_title;
+      qrTitleEl.style.fontSize = `${baseSize * 1.25}px`;
+      qrTitleEl.style.fontFamily = fontFamily;
+      
+      const qrSubtitleEl = document.getElementById('qr-subtitle');
+      qrSubtitleEl.textContent = config.qr_subtitle || defaultConfig.qr_subtitle;
+      qrSubtitleEl.style.fontSize = `${baseSize * 0.875}px`;
+      qrSubtitleEl.style.fontFamily = fontFamily;
+      
+      const contactTitleEl = document.getElementById('contact-title');
+      contactTitleEl.textContent = config.contact_title || defaultConfig.contact_title;
+      contactTitleEl.style.fontSize = `${baseSize}px`;
+      contactTitleEl.style.fontFamily = fontFamily;
+      
+      const contactTextEl = document.getElementById('contact-text');
+      contactTextEl.textContent = config.contact_text || defaultConfig.contact_text;
+      contactTextEl.style.fontSize = `${baseSize * 0.875}px`;
+      contactTextEl.style.fontFamily = fontFamily;
+      
+      const contactHandleEl = document.getElementById('contact-handle');
+      contactHandleEl.textContent = config.contact_handle || defaultConfig.contact_handle;
+      contactHandleEl.style.fontSize = `${baseSize * 0.875}px`;
+      contactHandleEl.style.fontFamily = fontFamily;
+      
+      // Update avatar initials
+      const initialsEl = document.getElementById('avatar-initials');
+      initialsEl.textContent = getInitials(config.student_name || defaultConfig.student_name);
+      
+      // Update colors
+      const backgroundColor = config.background_color || defaultConfig.background_color;
+      const cardColor = config.card_color || defaultConfig.card_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const primaryColor = config.primary_color || defaultConfig.primary_color;
+      const secondaryTextColor = config.secondary_text_color || defaultConfig.secondary_text_color;
+      
+      // Apply background gradient
+      const settingsWrapper = document.querySelector('.settings-wrapper');
+      settingsWrapper.style.background = `linear-gradient(135deg, ${backgroundColor} 0%, ${cardColor} 100%)`;
+      
+      // Apply card backgrounds
+      document.querySelectorAll('.settings-card').forEach(card => {
+        card.style.background = `linear-gradient(145deg, ${cardColor} 0%, ${cardColor}dd 100%)`;
+      });
+      
+      // Apply text colors
+      document.querySelectorAll('h1, h2, h3, h4').forEach(heading => {
+        heading.style.color = textColor;
+      });
+      
+      document.querySelectorAll('.text-white').forEach(el => {
+        if (!el.closest('.primary-button') && !el.closest('svg')) {
+          el.style.color = textColor;
+        }
+      });
+      
+      // Apply primary color
+      const avatarContainer = document.querySelector('.avatar-ring');
+      avatarContainer.style.background = `linear-gradient(135deg, ${primaryColor} 0%, ${primaryColor}cc 100%)`;
+      
+      const primaryButton = document.querySelectorAll('.primary-button');
+      primaryButton.forEach(btn => {
+        btn.style.background = `linear-gradient(135deg, ${primaryColor} 0%, ${primaryColor}dd 100%)`;
+      });
+      
+      document.querySelectorAll('.text-blue-400').forEach(el => {
+        el.style.color = primaryColor;
+      });
+      
+      document.querySelectorAll('.secondary-button').forEach(btn => {
+        btn.style.background = `${primaryColor}1a`;
+        btn.style.borderColor = `${primaryColor}4d`;
+      });
+      
+      // Apply secondary text color
+      document.querySelectorAll('.text-slate-400, .text-slate-500').forEach(el => {
+        el.style.color = secondaryTextColor;
+      });
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => {
+                config.background_color = value;
+                window.elementSdk.setConfig({ background_color: value });
+              }
+            },
+            {
+              get: () => config.card_color || defaultConfig.card_color,
+              set: (value) => {
+                config.card_color = value;
+                window.elementSdk.setConfig({ card_color: value });
+              }
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => {
+                config.text_color = value;
+                window.elementSdk.setConfig({ text_color: value });
+              }
+            },
+            {
+              get: () => config.primary_color || defaultConfig.primary_color,
+              set: (value) => {
+                config.primary_color = value;
+                window.elementSdk.setConfig({ primary_color: value });
+              }
+            },
+            {
+              get: () => config.secondary_text_color || defaultConfig.secondary_text_color,
+              set: (value) => {
+                config.secondary_text_color = value;
+                window.elementSdk.setConfig({ secondary_text_color: value });
+              }
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (value) => {
+              config.font_family = value;
+              window.elementSdk.setConfig({ font_family: value });
+            }
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (value) => {
+              config.font_size = value;
+              window.elementSdk.setConfig({ font_size: value });
+            }
+          }
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ["student_name", config.student_name || defaultConfig.student_name],
+          ["saved_group", config.saved_group || defaultConfig.saved_group],
+          ["status_text", config.status_text || defaultConfig.status_text],
+          ["last_updated", config.last_updated || defaultConfig.last_updated],
+          ["subjects_subtitle", config.subjects_subtitle || defaultConfig.subjects_subtitle],
+          ["account_title", config.account_title || defaultConfig.account_title],
+          ["current_email", config.current_email || defaultConfig.current_email],
+          ["email_button_text", config.email_button_text || defaultConfig.email_button_text],
+          ["password_button_text", config.password_button_text || defaultConfig.password_button_text],
+          ["qr_title", config.qr_title || defaultConfig.qr_title],
+          ["qr_subtitle", config.qr_subtitle || defaultConfig.qr_subtitle],
+          ["contact_title", config.contact_title || defaultConfig.contact_title],
+          ["contact_text", config.contact_text || defaultConfig.contact_text],
+          ["contact_handle", config.contact_handle || defaultConfig.contact_handle]
+        ])
+      });
+    }
+
+    // Initialize
+    renderSubjects();
+    onConfigChange(defaultConfig);
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b3f3c0d923b70c2',t:'MTc2NjczODAxOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

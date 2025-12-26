@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Profile</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    .profile-wrapper {
+      min-height: 100%;
+      background: #f8fafc;
+    }
+    
+    .info-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+    
+    .avatar-container {
+      box-shadow: 0 0 0 4px #e0e7ff;
+    }
+    
+    .settings-icon-button {
+      background: #f1f5f9;
+      transition: all 0.2s ease;
+    }
+    
+    .settings-icon-button:hover {
+      background: #e0e7ff;
+      transform: rotate(90deg);
+    }
+    
+    .info-row {
+      border-bottom: 1px solid #f1f5f9;
+    }
+    
+    .info-row:last-child {
+      border-bottom: none;
+    }
+    
+    .settings-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 50;
+      display: none;
+    }
+    
+    .settings-modal.active {
+      display: flex;
+    }
+    
+    .modal-backdrop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .settings-modal.active .modal-backdrop {
+      opacity: 1;
+    }
+    
+    .modal-content {
+      background: #ffffff;
+      box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      width: 100%;
+      max-width: 360px;
+      height: 100%;
+      overflow-y: auto;
+    }
+    
+    .settings-modal.active .modal-content {
+      transform: translateX(0);
+    }
+    
+    .settings-option {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      transition: all 0.2s ease;
+    }
+    
+    .settings-option:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      transform: translateX(4px);
+    }
+    
+    .close-button {
+      transition: all 0.2s ease;
+    }
+    
+    .close-button:hover {
+      transform: rotate(90deg);
+      background: rgba(239, 68, 68, 0.1);
+    }
+    
+    .telegram-link {
+      transition: all 0.2s ease;
+    }
+    
+    .telegram-link:hover {
+      transform: translateX(4px);
+      background: #f8fafc;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <main class="profile-wrapper w-full h-full overflow-auto">
+   <div class="max-w-7xl mx-auto px-4 py-8"><!-- Two-column grid (responsive) -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><!-- Left Column: Profile Card -->
+     <div class="lg:col-span-1">
+      <article class="info-card rounded-xl p-6 relative"><!-- Settings Icon (Top-right) --> <button class="settings-icon-button absolute top-4 right-4 w-9 h-9 rounded-lg flex items-center justify-center" id="settings-button" aria-label="Open settings">
+        <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg></button> <!-- Avatar -->
+       <div class="flex justify-center mb-5">
+        <div class="avatar-container w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center"><span class="text-white text-3xl font-bold" id="avatar-initials">AD</span>
+        </div>
+       </div><!-- Name -->
+       <h1 class="text-slate-900 text-xl font-bold text-center mb-1" id="student-name">Amirov Damir</h1><!-- Group -->
+       <p class="text-slate-600 text-sm text-center font-medium" id="profile-group">SEN2-25</p>
+      </article>
+     </div><!-- Right Column: Information Cards -->
+     <div class="lg:col-span-2 space-y-6"><!-- Personal Information Card -->
+      <article class="info-card rounded-xl p-6">
+       <h2 class="text-slate-900 text-lg font-bold mb-4" id="personal-info-title">Personal information</h2>
+       <div class="space-y-0"><!-- Email -->
+        <div class="info-row py-4 flex items-center gap-3">
+         <svg class="w-5 h-5 text-indigo-600 flex-shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+         </svg>
+         <div class="flex-1 min-w-0">
+          <p class="text-slate-500 text-xs mb-0.5" id="email-label">Email</p>
+          <p class="text-slate-900 text-sm truncate" id="email-address">amirov.damir@university.edu</p>
+         </div>
+        </div><!-- Country -->
+        <div class="info-row py-4 flex items-center gap-3">
+         <svg class="w-5 h-5 text-indigo-600 flex-shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+         </svg>
+         <div class="flex-1 min-w-0">
+          <p class="text-slate-500 text-xs mb-0.5" id="country-label">Country</p>
+          <p class="text-slate-900 text-sm" id="country">Uzbekistan</p>
+         </div>
+        </div><!-- City -->
+        <div class="info-row py-4 flex items-center gap-3">
+         <svg class="w-5 h-5 text-indigo-600 flex-shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+         </svg>
+         <div class="flex-1 min-w-0">
+          <p class="text-slate-500 text-xs mb-0.5" id="city-label">City</p>
+          <p class="text-slate-900 text-sm" id="city">Tashkent</p>
+         </div>
+        </div>
+       </div>
+      </article><!-- Academic Information Card -->
+      <article class="info-card rounded-xl p-6">
+       <h2 class="text-slate-900 text-lg font-bold mb-4" id="academic-info-title">Academic information</h2>
+       <div class="info-row py-4 flex items-center gap-3">
+        <svg class="w-5 h-5 text-indigo-600 flex-shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        <div class="flex-1 min-w-0">
+         <p class="text-slate-500 text-xs mb-0.5" id="group-label">Direction / Group</p>
+         <p class="text-slate-900 text-sm font-semibold" id="direction-group">SEN2-25</p>
+        </div>
+       </div>
+      </article><!-- Contact Card -->
+      <article class="info-card rounded-xl p-5">
+       <h3 class="text-slate-900 text-base font-bold mb-3" id="contact-title">Contact the creators</h3><a href="https://t.me/timetable_support" target="_blank" rel="noopener noreferrer" class="telegram-link flex items-center gap-3 p-3 rounded-lg"> <!-- Telegram Icon -->
+        <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
+         <svg class="w-5 h-5 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
+         </svg>
+        </div>
+        <div>
+         <p class="text-sm font-medium text-slate-900" id="contact-text">Telegram support</p>
+         <p class="text-blue-600 text-sm" id="contact-handle">@timetable_support</p>
+        </div></a>
+      </article>
+     </div>
+    </div>
+   </div>
+  </main><!-- Settings Modal -->
+  <div class="settings-modal" id="settings-modal">
+   <div class="modal-backdrop" id="modal-backdrop"></div>
+   <aside class="modal-content ml-auto relative"><!-- Modal Header -->
+    <header class="sticky top-0 bg-white backdrop-blur-sm px-6 py-5 border-b border-slate-200 flex items-center justify-between z-10">
+     <h2 class="text-slate-900 text-xl font-bold" id="settings-title">Account Settings</h2><button class="close-button w-9 h-9 rounded-lg flex items-center justify-center text-slate-400 hover:text-red-600" id="close-modal" aria-label="Close settings">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg></button>
+    </header><!-- Modal Content -->
+    <div class="px-6 py-6 space-y-3"><!-- Change Email --> <button class="settings-option w-full rounded-xl px-5 py-4 flex items-center gap-4 text-left">
+      <div class="w-11 h-11 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
+       <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+       </svg>
+      </div>
+      <div class="flex-1">
+       <p class="text-slate-900 font-semibold text-base" id="change-email-text">Change email</p>
+       <p class="text-slate-500 text-xs mt-0.5">Update your email address</p>
+      </div>
+      <svg class="w-5 h-5 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg></button> <!-- Change Password --> <button class="settings-option w-full rounded-xl px-5 py-4 flex items-center gap-4 text-left">
+      <div class="w-11 h-11 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
+       <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+       </svg>
+      </div>
+      <div class="flex-1">
+       <p class="text-slate-900 font-semibold text-base" id="change-password-text">Change password</p>
+       <p class="text-slate-500 text-xs mt-0.5">Update your account password</p>
+      </div>
+      <svg class="w-5 h-5 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg></button> <!-- Change Group --> <button class="settings-option w-full rounded-xl px-5 py-4 flex items-center gap-4 text-left">
+      <div class="w-11 h-11 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
+       <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+       </svg>
+      </div>
+      <div class="flex-1">
+       <p class="text-slate-900 font-semibold text-base" id="change-group-text">Change group</p>
+       <p class="text-slate-500 text-xs mt-0.5">Switch to a different group</p>
+      </div>
+      <svg class="w-5 h-5 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg></button>
+    </div>
+   </aside>
+  </div>
+  <script>
+    const defaultConfig = {
+      student_name: "Amirov Damir",
+      direction_group: "SEN2-25",
+      personal_info_title: "Personal information",
+      email_label: "Email",
+      email_address: "amirov.damir@university.edu",
+      country_label: "Country",
+      country: "Kazakhstan",
+      city_label: "City",
+      city: "Almaty",
+      academic_info_title: "Academic information",
+      group_label: "Direction / Group",
+      settings_title: "Account Settings",
+      change_email_text: "Change email",
+      change_password_text: "Change password",
+      change_group_text: "Change group",
+      contact_title: "Contact the creators",
+      contact_text: "Telegram support",
+      contact_handle: "@timetable_support",
+      background_color: "#f8fafc",
+      card_color: "#ffffff",
+      text_color: "#0f172a",
+      primary_color: "#4f46e5",
+      secondary_text_color: "#64748b",
+      font_family: "system-ui",
+      font_size: 16
+    };
+
+    function getInitials(name) {
+      const parts = name.trim().split(' ');
+      if (parts.length >= 2) {
+        return (parts[0][0] + parts[1][0]).toUpperCase();
+      }
+      return name.substring(0, 2).toUpperCase();
+    }
+
+    // Modal functionality
+    const settingsButton = document.getElementById('settings-button');
+    const settingsModal = document.getElementById('settings-modal');
+    const closeModal = document.getElementById('close-modal');
+    const modalBackdrop = document.getElementById('modal-backdrop');
+
+    function openModal() {
+      settingsModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModalFunc() {
+      settingsModal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    settingsButton.addEventListener('click', openModal);
+    closeModal.addEventListener('click', closeModalFunc);
+    modalBackdrop.addEventListener('click', closeModalFunc);
+
+    async function onConfigChange(config) {
+      const customFont = config.font_family || defaultConfig.font_family;
+      const baseSize = config.font_size || defaultConfig.font_size;
+      const baseFontStack = 'system-ui, -apple-system, sans-serif';
+      const fontFamily = `${customFont}, ${baseFontStack}`;
+      
+      // Update font family
+      document.body.style.fontFamily = fontFamily;
+      
+      // Update text content and sizes
+      const studentNameEl = document.getElementById('student-name');
+      studentNameEl.textContent = config.student_name || defaultConfig.student_name;
+      studentNameEl.style.fontSize = `${baseSize * 1.25}px`;
+      studentNameEl.style.fontFamily = fontFamily;
+      
+      const profileGroupEl = document.getElementById('profile-group');
+      profileGroupEl.textContent = config.direction_group || defaultConfig.direction_group;
+      profileGroupEl.style.fontSize = `${baseSize * 0.875}px`;
+      profileGroupEl.style.fontFamily = fontFamily;
+      
+      const personalInfoTitleEl = document.getElementById('personal-info-title');
+      personalInfoTitleEl.textContent = config.personal_info_title || defaultConfig.personal_info_title;
+      personalInfoTitleEl.style.fontSize = `${baseSize * 1.125}px`;
+      personalInfoTitleEl.style.fontFamily = fontFamily;
+      
+      const emailLabelEl = document.getElementById('email-label');
+      emailLabelEl.textContent = config.email_label || defaultConfig.email_label;
+      emailLabelEl.style.fontSize = `${baseSize * 0.75}px`;
+      emailLabelEl.style.fontFamily = fontFamily;
+      
+      const emailAddressEl = document.getElementById('email-address');
+      emailAddressEl.textContent = config.email_address || defaultConfig.email_address;
+      emailAddressEl.style.fontSize = `${baseSize * 0.875}px`;
+      emailAddressEl.style.fontFamily = fontFamily;
+      
+      const countryLabelEl = document.getElementById('country-label');
+      countryLabelEl.textContent = config.country_label || defaultConfig.country_label;
+      countryLabelEl.style.fontSize = `${baseSize * 0.75}px`;
+      countryLabelEl.style.fontFamily = fontFamily;
+      
+      const countryEl = document.getElementById('country');
+      countryEl.textContent = config.country || defaultConfig.country;
+      countryEl.style.fontSize = `${baseSize * 0.875}px`;
+      countryEl.style.fontFamily = fontFamily;
+      
+      const cityLabelEl = document.getElementById('city-label');
+      cityLabelEl.textContent = config.city_label || defaultConfig.city_label;
+      cityLabelEl.style.fontSize = `${baseSize * 0.75}px`;
+      cityLabelEl.style.fontFamily = fontFamily;
+      
+      const cityEl = document.getElementById('city');
+      cityEl.textContent = config.city || defaultConfig.city;
+      cityEl.style.fontSize = `${baseSize * 0.875}px`;
+      cityEl.style.fontFamily = fontFamily;
+      
+      const academicInfoTitleEl = document.getElementById('academic-info-title');
+      academicInfoTitleEl.textContent = config.academic_info_title || defaultConfig.academic_info_title;
+      academicInfoTitleEl.style.fontSize = `${baseSize * 1.125}px`;
+      academicInfoTitleEl.style.fontFamily = fontFamily;
+      
+      const groupLabelEl = document.getElementById('group-label');
+      groupLabelEl.textContent = config.group_label || defaultConfig.group_label;
+      groupLabelEl.style.fontSize = `${baseSize * 0.75}px`;
+      groupLabelEl.style.fontFamily = fontFamily;
+      
+      const directionGroupEl = document.getElementById('direction-group');
+      directionGroupEl.textContent = config.direction_group || defaultConfig.direction_group;
+      directionGroupEl.style.fontSize = `${baseSize * 0.875}px`;
+      directionGroupEl.style.fontFamily = fontFamily;
+      
+      const settingsTitleEl = document.getElementById('settings-title');
+      settingsTitleEl.textContent = config.settings_title || defaultConfig.settings_title;
+      settingsTitleEl.style.fontSize = `${baseSize * 1.25}px`;
+      settingsTitleEl.style.fontFamily = fontFamily;
+      
+      const changeEmailEl = document.getElementById('change-email-text');
+      changeEmailEl.textContent = config.change_email_text || defaultConfig.change_email_text;
+      changeEmailEl.style.fontSize = `${baseSize}px`;
+      changeEmailEl.style.fontFamily = fontFamily;
+      
+      const changePasswordEl = document.getElementById('change-password-text');
+      changePasswordEl.textContent = config.change_password_text || defaultConfig.change_password_text;
+      changePasswordEl.style.fontSize = `${baseSize}px`;
+      changePasswordEl.style.fontFamily = fontFamily;
+      
+      const changeGroupEl = document.getElementById('change-group-text');
+      changeGroupEl.textContent = config.change_group_text || defaultConfig.change_group_text;
+      changeGroupEl.style.fontSize = `${baseSize}px`;
+      changeGroupEl.style.fontFamily = fontFamily;
+      
+      const contactTitleEl = document.getElementById('contact-title');
+      contactTitleEl.textContent = config.contact_title || defaultConfig.contact_title;
+      contactTitleEl.style.fontSize = `${baseSize}px`;
+      contactTitleEl.style.fontFamily = fontFamily;
+      
+      const contactTextEl = document.getElementById('contact-text');
+      contactTextEl.textContent = config.contact_text || defaultConfig.contact_text;
+      contactTextEl.style.fontSize = `${baseSize * 0.875}px`;
+      contactTextEl.style.fontFamily = fontFamily;
+      
+      const contactHandleEl = document.getElementById('contact-handle');
+      contactHandleEl.textContent = config.contact_handle || defaultConfig.contact_handle;
+      contactHandleEl.style.fontSize = `${baseSize * 0.875}px`;
+      contactHandleEl.style.fontFamily = fontFamily;
+      
+      // Update avatar initials
+      const initialsEl = document.getElementById('avatar-initials');
+      initialsEl.textContent = getInitials(config.student_name || defaultConfig.student_name);
+      
+      // Update colors
+      const backgroundColor = config.background_color || defaultConfig.background_color;
+      const cardColor = config.card_color || defaultConfig.card_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const primaryColor = config.primary_color || defaultConfig.primary_color;
+      const secondaryTextColor = config.secondary_text_color || defaultConfig.secondary_text_color;
+      
+      // Apply background
+      const profileWrapper = document.querySelector('.profile-wrapper');
+      profileWrapper.style.background = backgroundColor;
+      
+      // Apply card backgrounds
+      document.querySelectorAll('.info-card').forEach(card => {
+        card.style.background = cardColor;
+      });
+      
+      const modalContent = document.querySelector('.modal-content');
+      modalContent.style.background = cardColor;
+      
+      // Apply text colors
+      document.querySelectorAll('h1, h2, h3').forEach(heading => {
+        heading.style.color = textColor;
+      });
+      
+      document.querySelectorAll('.text-slate-900').forEach(el => {
+        if (!el.closest('svg')) {
+          el.style.color = textColor;
+        }
+      });
+      
+      // Apply primary color
+      const avatarContainer = document.querySelector('.avatar-container');
+      avatarContainer.style.background = `linear-gradient(135deg, ${primaryColor} 0%, ${primaryColor}dd 100%)`;
+      
+      document.querySelectorAll('.text-indigo-600').forEach(el => {
+        el.style.color = primaryColor;
+      });
+      
+      const settingsIconButton = document.querySelector('.settings-icon-button');
+      settingsIconButton.style.background = `${cardColor}`;
+      
+      // Apply secondary text color
+      document.querySelectorAll('.text-slate-500, .text-slate-600, .text-slate-400').forEach(el => {
+        el.style.color = secondaryTextColor;
+      });
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => {
+                config.background_color = value;
+                window.elementSdk.setConfig({ background_color: value });
+              }
+            },
+            {
+              get: () => config.card_color || defaultConfig.card_color,
+              set: (value) => {
+                config.card_color = value;
+                window.elementSdk.setConfig({ card_color: value });
+              }
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => {
+                config.text_color = value;
+                window.elementSdk.setConfig({ text_color: value });
+              }
+            },
+            {
+              get: () => config.primary_color || defaultConfig.primary_color,
+              set: (value) => {
+                config.primary_color = value;
+                window.elementSdk.setConfig({ primary_color: value });
+              }
+            },
+            {
+              get: () => config.secondary_text_color || defaultConfig.secondary_text_color,
+              set: (value) => {
+                config.secondary_text_color = value;
+                window.elementSdk.setConfig({ secondary_text_color: value });
+              }
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (value) => {
+              config.font_family = value;
+              window.elementSdk.setConfig({ font_family: value });
+            }
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (value) => {
+              config.font_size = value;
+              window.elementSdk.setConfig({ font_size: value });
+            }
+          }
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ["student_name", config.student_name || defaultConfig.student_name],
+          ["direction_group", config.direction_group || defaultConfig.direction_group],
+          ["personal_info_title", config.personal_info_title || defaultConfig.personal_info_title],
+          ["email_label", config.email_label || defaultConfig.email_label],
+          ["email_address", config.email_address || defaultConfig.email_address],
+          ["country_label", config.country_label || defaultConfig.country_label],
+          ["country", config.country || defaultConfig.country],
+          ["city_label", config.city_label || defaultConfig.city_label],
+          ["city", config.city || defaultConfig.city],
+          ["academic_info_title", config.academic_info_title || defaultConfig.academic_info_title],
+          ["group_label", config.group_label || defaultConfig.group_label],
+          ["settings_title", config.settings_title || defaultConfig.settings_title],
+          ["change_email_text", config.change_email_text || defaultConfig.change_email_text],
+          ["change_password_text", config.change_password_text || defaultConfig.change_password_text],
+          ["change_group_text", config.change_group_text || defaultConfig.change_group_text],
+          ["contact_title", config.contact_title || defaultConfig.contact_title],
+          ["contact_text", config.contact_text || defaultConfig.contact_text],
+          ["contact_handle", config.contact_handle || defaultConfig.contact_handle]
+        ])
+      });
+    }
+
+    // Initialize
+    onConfigChange(defaultConfig);
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b3f5ad4e3461788',t:'MTc2NjczOTI4MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
